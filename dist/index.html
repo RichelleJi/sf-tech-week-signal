@@ -61,13 +61,12 @@
       <section class="criteria-grid" id="criteriaGrid"></section>
       <section class="live-processing" id="runPanel" aria-live="polite">
         <div class="live-head"><div><p class="eyebrow">LIVE PROCESSING</p><h3>Run telemetry</h3></div><span class="runner-state" id="runState">READY</span></div>
-        <div class="live-stats">
-          <div><span>Processed</span><strong id="processedCount">0 / 40</strong></div>
-          <div><span>Tokens in</span><strong id="inputTokens">0</strong></div>
-          <div><span>Tokens out</span><strong id="outputTokens">0</strong></div>
-          <div><span>Total tokens</span><strong id="totalTokens">0</strong></div>
+        <div class="processed-bar"><div class="processed-meta"><span>PROCESSED <strong id="processedCount">0 / 40</strong></span><span id="runDetail">0%</span></div><div class="progress-track"><i id="runProgress"></i></div></div>
+        <div class="token-meter">
+          <div class="token-total"><span>TOTAL TOKENS</span><strong id="totalTokens">0</strong></div>
+          <div class="token-track" aria-label="Input and output token usage"><i class="token-in" id="tokenInBar"></i><i class="token-out" id="tokenOutBar"></i></div>
+          <div class="token-legend"><span><i class="token-in"></i>Tokens in <b id="inputTokens">0</b></span><span><i class="token-out"></i>Tokens out <b id="outputTokens">0</b></span></div>
         </div>
-        <div class="processed-bar"><div class="processed-meta"><span id="runDetail">0% processed</span><span>40 events queued</span></div><div class="progress-track"><i id="runProgress"></i></div></div>
         <div class="model-activity"><span class="activity-pulse"></span><div><small>MODEL ACTIVITY</small><strong id="runStatus">Waiting for a run</strong><p id="modelActivity">Ready to evaluate event records against the classification rubric.</p></div></div>
         <div class="live-signal-mix">
           <div class="mix-head"><span>SIGNAL MIX</span><small>Updates after every classified event</small></div>
