@@ -16,18 +16,20 @@
         <summary><span>◎</span> Classification run</summary>
         <div class="sidebar-menu-body run-actions">
           <label class="model-switch" for="modelSelect"><span>MODEL IN USE</span><select id="modelSelect" aria-label="Classifier model"><option>Qwen/Qwen3.6-35B-A3B</option><option>google/gemma-4-26B-A4B-it</option></select></label>
-          <details class="config-dropdown">
-            <summary>Configuration <span>⌄</span></summary>
-            <div class="config-menu">
-              <div class="config-current" id="configCurrent">SF calendar · Qwen3.6</div>
-              <section class="run-config" aria-label="Classification configuration">
-                <label><span>Event source</span><input id="sourceUrl" value="https://www.tech-week.com/calendar/sf"></label>
-                <label><span>Classifier endpoint</span><input id="endpointUrl" value="https://router-g80r-dev-nest.recursal-dev.com/v1/systemone"></label>
-              </section>
-              <p class="secure-line">API credentials stay server-side; this preview never stores a key in the browser.</p>
-            </div>
-          </details>
-          <button class="btn primary" id="runBtn">Run classification <span>↗</span></button>
+          <div class="run-control-row">
+            <details class="config-dropdown">
+              <summary>Configuration <span>⌄</span></summary>
+              <div class="config-menu">
+                <div class="config-current" id="configCurrent">SF calendar · Qwen3.6</div>
+                <section class="run-config" aria-label="Classification configuration">
+                  <label><span>Event source</span><input id="sourceUrl" value="https://www.tech-week.com/calendar/sf"></label>
+                  <label><span>Classifier endpoint</span><input id="endpointUrl" value="https://router-g80r-dev-nest.recursal-dev.com/v1/systemone"></label>
+                </section>
+                <p class="secure-line">API credentials stay server-side; this preview never stores a key in the browser.</p>
+              </div>
+            </details>
+            <button class="btn primary" id="runBtn">Run classification <span>↗</span></button>
+          </div>
         </div>
       </details>
       <details class="sidebar-menu sidebar-live" id="criteria" open>
@@ -87,6 +89,8 @@
         <button class="chip" data-signal="Sales pitch / noise">Sales pitch / noise</button>
       </div>
       <section class="panel event-table-panel">
+        <div class="event-render-head"><span>Classification stream</span><b id="eventStreamCount">40 / 40 rendered</b></div>
+        <div class="event-stream" id="eventStream" role="progressbar" aria-label="Events rendered" aria-valuemin="0" aria-valuemax="40" aria-valuenow="40"></div>
         <div class="table-wrap"><table><thead><tr><th>Time</th><th>Event / host</th><th>Primary signal</th><th>Best for</th><th>Vibe</th><th>Verdict</th></tr></thead><tbody id="allEventRows"></tbody></table></div>
         <div class="empty-state" id="eventEmpty" hidden>No events match this filter.</div>
       </section>

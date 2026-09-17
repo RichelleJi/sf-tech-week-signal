@@ -58,16 +58,35 @@ function renderRecommendations(persona='founder'){
 }
 function rowMarkup(e,full=false){
  const eventCell=`<span class="event-name">${e.name}</span><span class="event-host">${e.host}</span>`;
- if(full)return `<tr><td>${e.time}</td><td>${eventCell}</td><td><span class="tag">${e.signal}</span></td><td>${e.best}</td><td class="score-cell">${e.score}</td><td><span class="verdict ${e.verdict==='GO'?'go':e.verdict==='SKIP'?'skip':''}">${e.verdict}</span></td></tr>`;
- return `<tr><td>${eventCell}</td><td><span class="tag">${e.signal}</span></td><td>${e.best}</td><td class="score-cell">${e.score}</td><td><span class="verdict ${e.verdict==='GO'?'go':e.verdict==='SKIP'?'skip':''}">${e.verdict}</span></td></tr>`;
+ if(full)return `<tr data-event-id="${e.id}"><td>${e.time}</td><td>${eventCell}</td><td><span class="tag">${e.signal}</span></td><td>${e.best}</td><td class="score-cell" data-vibe="${e.score}">${e.score}</td><td><span class="verdict ${e.verdict==='GO'?'go':e.verdict==='SKIP'?'skip':''}">${e.verdict}</span></td></tr>`;
+ return `<tr data-event-id="${e.id}"><td>${eventCell}</td><td><span class="tag">${e.signal}</span></td><td>${e.best}</td><td class="score-cell" data-vibe="${e.score}">${e.score}</td><td><span class="verdict ${e.verdict==='GO'?'go':e.verdict==='SKIP'?'skip':''}">${e.verdict}</span></td></tr>`;
 }
 function renderRows(){document.querySelector('#overviewRows').innerHTML=events.slice(0,5).map(e=>rowMarkup(e)).join('')}
 let activeSignal='all';
+let processedEvents=40;
+let classificationRunning=false;
+const streamClass={'Investor access':'investor','Engineer talent':'engineer','Research talent':'research','Looking for a job':'jobs','Sales pitch / noise':'noise'};
+function renderEventStream(){document.querySelector('#eventStream').innerHTML=events.map(e=>`<i class="stream-${streamClass[e.signal]} is-rendered" aria-hidden="true"></i>`).join('')}
+function updateEventRendering(processed){
+ processedEvents=processed;
+ document.querySelectorAll('#allEventRows tr,#overviewRows tr').forEach(row=>{
+  const id=Number(row.dataset.eventId),done=id<=processed,active=classificationRunning&&id===Math.min(processed+1,events.length);
+  row.classList.toggle('event-classified',done);row.classList.toggle('event-active',active);row.classList.toggle('event-queued',!done&&!active);
+  const vibe=row.querySelector('.score-cell');if(vibe)vibe.textContent=done?vibe.dataset.vibe:active?'···':'—';
+ });
+ document.querySelectorAll('#eventStream i').forEach((segment,index)=>{segment.classList.toggle('is-rendered',index<processed);segment.classList.toggle('is-active',classificationRunning&&index===processed)});
+ const count=document.querySelector('#eventStreamCount'),stream=document.querySelector('#eventStream');
+ if(count)count.textContent=`${processed} / ${events.length} rendered`;
+ if(stream){stream.setAttribute('aria-valuenow',processed);stream.setAttribute('aria-label',`${processed} of ${events.length} events rendered`)}
+ const eventsCount=document.querySelector('#eventsCount');if(eventsCount)eventsCount.textContent=processed;
+ document.querySelector('.event-table-panel')?.classList.toggle('is-classifying',classificationRunning);
+}
 function renderAllEvents(){
  const q=document.querySelector('#eventSearch').value.trim().toLowerCase();
  const filtered=events.filter(e=>(activeSignal==='all'||e.signal===activeSignal)&&(!q||`${e.name} ${e.host}`.toLowerCase().includes(q)));
  document.querySelector('#allEventRows').innerHTML=filtered.map(e=>rowMarkup(e,true)).join('');
  document.querySelector('#eventEmpty').hidden=filtered.length>0;
+ updateEventRendering(processedEvents);
 }
 function renderCriteria(){
  document.querySelector('#criteriaGrid').innerHTML=criteria.map((c,i)=>`<article class="panel criterion"><div class="criterion-top"><div><h3 class="${c[4]}">${c[0]}</h3><p>${c[2]}</p></div><span class="criterion-icon">${c[1]}</span></div><div class="criterion-controls"><input class="${c[4]}" type="range" min="0" max="40" value="${c[3]}" style="--fill:${c[3]/40*100}%" data-weight="${i}" aria-label="${c[0]} weight"><span class="bar-label">${c[0]}</span><output>${c[3]}%</output></div></article>`).join('');
@@ -89,14 +108,15 @@ function updateLiveSignalMix(processed){
 function runClassification(){
  const panel=document.querySelector('#runPanel'),bar=document.querySelector('#runProgress'),status=document.querySelector('#runStatus'),detail=document.querySelector('#runDetail'),state=document.querySelector('#runState'),button=document.querySelector('#runBtn'),processedCount=document.querySelector('#processedCount'),inputTokens=document.querySelector('#inputTokens'),outputTokens=document.querySelector('#outputTokens'),totalTokens=document.querySelector('#totalTokens'),tokenInBar=document.querySelector('#tokenInBar'),tokenOutBar=document.querySelector('#tokenOutBar'),activity=document.querySelector('#modelActivity');
  const model=document.querySelector('#modelSelect').value.split('/').pop();
+ classificationRunning=true;processedEvents=0;updateEventRendering(0);
  panel.classList.remove('complete');panel.classList.add('running');state.textContent='RUNNING';button.disabled=true;tokenInBar.style.width='0';tokenOutBar.style.width='0';updateLiveSignalMix(0);let step=0;
  const stages=['Fetching calendar…','Normalizing event records…',`Classifying with ${model}…`,'Ranking by persona…'];
  const activityStages=['Reading titles, hosts, times, and descriptions from the calendar.','Mapping source fields into a consistent event schema.','Scoring audience fit, event quality, and sales-noise signals.','Building ranked recommendations for each attendee persona.'];
- const timer=setInterval(()=>{step++;const pct=Math.min(step*8,100),processed=Math.min(Math.round(pct/100*40),40),stageIndex=Math.min(Math.floor(pct/27),3),tokensIn=Math.round(78700*pct/100),tokensOut=Math.round(35300*pct/100);bar.style.width=`${pct}%`;detail.textContent=`${pct}%`;processedCount.textContent=`${processed} / 40`;inputTokens.textContent=tokensIn.toLocaleString();outputTokens.textContent=tokensOut.toLocaleString();totalTokens.textContent=(tokensIn+tokensOut).toLocaleString();tokenInBar.style.width=`${tokensIn/114000*100}%`;tokenOutBar.style.width=`${tokensOut/114000*100}%`;updateLiveSignalMix(processed);status.textContent=stages[stageIndex];activity.textContent=stageIndex===2&&processed?`Evaluating “${events[Math.min(processed-1,39)].name}” against the weighted rubric.`:activityStages[stageIndex];if(pct===100){clearInterval(timer);setTimeout(()=>{panel.classList.remove('running');panel.classList.add('complete');state.textContent='COMPLETE';status.textContent='Classification complete';detail.textContent='100%';activity.textContent='40 events vibe-ranked and ready for review.';button.disabled=false;showToast('40 events classified · results updated')},450)}},120);
+ const timer=setInterval(()=>{step++;const pct=Math.min(step*8,100),processed=Math.min(Math.round(pct/100*40),40),stageIndex=Math.min(Math.floor(pct/27),3),tokensIn=Math.round(78700*pct/100),tokensOut=Math.round(35300*pct/100);bar.style.width=`${pct}%`;detail.textContent=`${pct}%`;processedCount.textContent=`${processed} / 40`;inputTokens.textContent=tokensIn.toLocaleString();outputTokens.textContent=tokensOut.toLocaleString();totalTokens.textContent=(tokensIn+tokensOut).toLocaleString();tokenInBar.style.width=`${tokensIn/114000*100}%`;tokenOutBar.style.width=`${tokensOut/114000*100}%`;updateLiveSignalMix(processed);updateEventRendering(processed);status.textContent=stages[stageIndex];activity.textContent=stageIndex===2&&processed?`Evaluating “${events[Math.min(processed-1,39)].name}” against the weighted rubric.`:activityStages[stageIndex];if(pct===100){clearInterval(timer);setTimeout(()=>{classificationRunning=false;updateEventRendering(40);panel.classList.remove('running');panel.classList.add('complete');state.textContent='COMPLETE';status.textContent='Classification complete';detail.textContent='100%';activity.textContent='40 events vibe-ranked and ready for review.';button.disabled=false;showToast('40 events classified · results updated')},450)}},120);
 }
 document.querySelector('#copyPayload').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(document.querySelector('#payloadPreview').innerText);showToast('Request payload copied')}catch{showToast('Copy unavailable in this preview')}});
 function showToast(message){const t=document.querySelector('#toast');t.textContent=message;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400)}
-renderRecommendations();renderRows();renderAllEvents();renderCriteria();
+renderEventStream();renderRecommendations();renderRows();renderAllEvents();renderCriteria();
 function registerAgentTools(){
  const context=document.modelContext;
  if(!context?.registerTool)return;
