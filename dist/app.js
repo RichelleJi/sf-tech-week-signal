@@ -40,7 +40,7 @@ const rawEvents = [
  ['7:30am','Coffee Rave','SFSC','Community / network','General networking',72,66,'MAYBE'],
  ['9:00am','Law in the Age of AI','SimpleClosure, Carta','Research talent','Researchers',87,85,'GO']
 ];
-const events=rawEvents.map((e,i)=>({id:i+1,time:e[0],name:e[1],host:e[2],signal:e[3],best:e[4],confidence:e[5],score:e[6],verdict:e[7],latency:(1.35+(i%7)*.14).toFixed(2)}));
+const events=rawEvents.map((e,i)=>({id:i+1,time:e[0],name:e[1],host:e[2],signal:e[3],best:e[4],score:e[6],verdict:e[7]}));
 const personaOrder={founder:[8,4,11],jobseeker:[2,9,14],engineer:[7,12,16],researcher:[7,0,20]};
 const criteria=[
  ['Investor access','I','Partner, principal, angel, or allocator density; fundraising intent; small-group access.',24,'positive'],
@@ -55,8 +55,8 @@ function renderRecommendations(persona='founder'){
 }
 function rowMarkup(e,full=false){
  const eventCell=`<span class="event-name">${e.name}</span><span class="event-host">${e.host}</span>`;
- if(full)return `<tr><td>${e.time}</td><td>${eventCell}</td><td><span class="tag">${e.signal}</span></td><td>${e.best}</td><td><span class="confidence"><span class="confidence-bar"><i style="width:${e.confidence}%"></i></span>${e.confidence}%</span></td><td class="score-cell">${e.score}</td><td><span class="verdict ${e.verdict==='GO'?'go':e.verdict==='SKIP'?'skip':''}">${e.verdict}</span></td></tr>`;
- return `<tr><td>${eventCell}</td><td><span class="tag">${e.signal}</span></td><td>${e.best}</td><td><span class="confidence"><span class="confidence-bar"><i style="width:${e.confidence}%"></i></span>${e.confidence}%</span></td><td>${e.latency}s</td><td><span class="verdict ${e.verdict==='GO'?'go':e.verdict==='SKIP'?'skip':''}">${e.verdict}</span></td></tr>`;
+ if(full)return `<tr><td>${e.time}</td><td>${eventCell}</td><td><span class="tag">${e.signal}</span></td><td>${e.best}</td><td class="score-cell">${e.score}</td><td><span class="verdict ${e.verdict==='GO'?'go':e.verdict==='SKIP'?'skip':''}">${e.verdict}</span></td></tr>`;
+ return `<tr><td>${eventCell}</td><td><span class="tag">${e.signal}</span></td><td>${e.best}</td><td class="score-cell">${e.score}</td><td><span class="verdict ${e.verdict==='GO'?'go':e.verdict==='SKIP'?'skip':''}">${e.verdict}</span></td></tr>`;
 }
 function renderRows(){document.querySelector('#overviewRows').innerHTML=events.slice(0,5).map(e=>rowMarkup(e)).join('')}
 let activeSignal='all';
@@ -87,7 +87,7 @@ document.querySelector('#runBtn').addEventListener('click',runClassification);
 function runClassification(){
  const overlay=document.querySelector('#runOverlay'),bar=document.querySelector('#runProgress'),status=document.querySelector('#runStatus'),detail=document.querySelector('#runDetail');
  overlay.hidden=false;let step=0;const stages=['Fetching calendar…','Normalizing event records…','Classifying with Qwen…','Ranking by persona…'];
- const timer=setInterval(()=>{step++;const pct=Math.min(step*8,100);bar.style.width=`${pct}%`;detail.textContent=`${Math.min(Math.round(pct/100*40),40)} of 40 events`;status.textContent=stages[Math.min(Math.floor(pct/27),3)];if(pct===100){clearInterval(timer);setTimeout(()=>{overlay.hidden=true;bar.style.width='0';showToast('40 events classified · average confidence 87.3%')},500)}},120);
+ const timer=setInterval(()=>{step++;const pct=Math.min(step*8,100);bar.style.width=`${pct}%`;detail.textContent=`${Math.min(Math.round(pct/100*40),40)} of 40 events`;status.textContent=stages[Math.min(Math.floor(pct/27),3)];if(pct===100){clearInterval(timer);setTimeout(()=>{overlay.hidden=true;bar.style.width='0';showToast('40 events classified · recommendations updated')},500)}},120);
 }
 document.querySelector('#copyPayload').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(document.querySelector('#payloadPreview').innerText);showToast('Request payload copied')}catch{showToast('Copy unavailable in this preview')}});
 function showToast(message){const t=document.querySelector('#toast');t.textContent=message;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400)}
