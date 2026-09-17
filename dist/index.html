@@ -16,6 +16,7 @@
         <summary><span>◎</span> Classification run</summary>
         <div class="sidebar-menu-body run-actions">
           <div class="weight-total">TOTAL WEIGHT <strong id="weightTotal">100%</strong></div>
+          <label class="model-switch" for="modelSelect"><span>MODEL IN USE</span><select id="modelSelect" aria-label="Classifier model"><option>Qwen/Qwen3.6-35B-A3B</option><option>google/gemma-4-26B-A4B-it</option></select></label>
           <details class="config-dropdown">
             <summary>Configuration <span>⌄</span></summary>
             <div class="config-menu">
@@ -23,7 +24,6 @@
               <section class="run-config" aria-label="Classification configuration">
                 <label><span>Event source</span><input id="sourceUrl" value="https://www.tech-week.com/calendar/sf"></label>
                 <label><span>Classifier endpoint</span><input id="endpointUrl" value="https://router-g80r-dev-nest.recursal-dev.com/v1/systemone"></label>
-                <label><span>Model</span><select id="modelSelect"><option>Qwen/Qwen3.6-35B-A3B</option><option>google/gemma-4-26B-A4B-it</option></select></label>
               </section>
               <p class="secure-line">API credentials stay server-side; this preview never stores a key in the browser.</p>
             </div>
@@ -31,16 +31,11 @@
           <button class="btn primary" id="runBtn">Run classification <span>↗</span></button>
         </div>
       </details>
-      <details class="sidebar-menu sidebar-rubric rubric-pane" id="rubric">
-        <summary><span>≋</span> What counts as signal</summary>
-        <div class="sidebar-menu-body"><div class="criteria-grid" id="criteriaGrid"></div></div>
-      </details>
       <details class="sidebar-menu sidebar-live" id="criteria" open>
         <summary><span>◉</span> Live processing</summary>
         <div class="sidebar-menu-body">
           <section class="live-processing" id="runPanel" aria-live="polite">
-            <div class="live-head"><h3>Run telemetry</h3><span class="runner-state" id="runState">READY</span></div>
-            <div class="processed-bar"><div class="processed-meta"><span>PROCESSED <strong id="processedCount">0 / 40</strong></span><span id="runDetail">0%</span></div><div class="progress-track"><i id="runProgress"></i></div></div>
+            <div class="processed-bar"><div class="processed-meta"><span>PROCESSED <strong id="processedCount">0 / 40</strong></span><span><span class="runner-state" id="runState">READY</span> <b id="runDetail">0%</b></span></div><div class="progress-track"><i id="runProgress"></i></div></div>
             <div class="token-meter">
               <div class="token-total"><span>TOTAL TOKENS</span><strong id="totalTokens">0</strong></div>
               <div class="token-track" aria-label="Input and output token usage"><i class="token-in" id="tokenInBar"></i><i class="token-out" id="tokenOutBar"></i></div>
@@ -53,6 +48,10 @@
             </div>
           </section>
         </div>
+      </details>
+      <details class="sidebar-menu sidebar-rubric rubric-pane" id="rubric">
+        <summary><span>≋</span> What counts as signal</summary>
+        <div class="sidebar-menu-body"><div class="criteria-grid" id="criteriaGrid"></div></div>
       </details>
     </div>
     <div class="sidebar-foot">
