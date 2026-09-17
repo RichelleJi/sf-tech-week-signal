@@ -12,7 +12,8 @@
   <aside class="sidebar">
     <div class="brand"><span class="brand-mark">S/</span><span>Signal</span></div>
     <nav aria-label="Page sections">
-      <a class="nav-item" href="#criteria"><span>◎</span> Run setup</a>
+      <a class="nav-item" href="#criteria"><span>◎</span> Classification run</a>
+      <a class="nav-item" href="#rubric"><span>≋</span> What counts as signal</a>
       <a class="nav-item active" href="#overview"><span>⌁</span> Overview</a>
       <a class="nav-item" href="#events"><span>▤</span> All events <b>40</b></a>
       <a class="nav-item" href="#model"><span>⌘</span> Model & process</a>
@@ -38,8 +39,7 @@
     </section>
 
     <div class="view compact-rubric run-console" id="criteria">
-      <section class="run-console-head">
-        <div><p class="eyebrow">CLASSIFICATION RUN</p></div>
+      <section class="run-console-head action-only">
         <div class="run-actions">
           <div class="weight-total">TOTAL WEIGHT <strong id="weightTotal">100%</strong></div>
           <details class="config-dropdown">
@@ -58,8 +58,7 @@
         </div>
       </section>
       <div class="run-workspace">
-      <section class="rubric-pane">
-        <div class="rubric-label"><div><p class="eyebrow">CLASSIFICATION RUBRIC</p><h3>What counts as signal</h3></div><small>Drag any weight before running</small></div>
+      <section class="rubric-pane" id="rubric" aria-label="What counts as signal">
         <div class="criteria-grid" id="criteriaGrid"></div>
       </section>
       <section class="live-processing" id="runPanel" aria-live="polite">
