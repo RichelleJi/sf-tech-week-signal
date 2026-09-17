@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Classify SF Tech Week 2026 events by audience fit, networking value, and signal quality.">
+  <title>Signal / SF Tech Week 2026</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23f6ff58'/%3E%3Cpath d='M7 21h4l3-11 4 15 3-9h4' fill='none' stroke='%230b0d10' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand"><span class="brand-mark">S/</span><span>Signal</span></div>
+    <nav aria-label="Primary navigation">
+      <button class="nav-item active" data-view="overview" aria-current="page"><span>⌁</span> Overview</button>
+      <button class="nav-item" data-view="events"><span>▤</span> All events <b>24</b></button>
+      <button class="nav-item" data-view="criteria"><span>◎</span> Criteria</button>
+      <button class="nav-item" data-view="model"><span>⌘</span> Model & process</button>
+    </nav>
+    <div class="sidebar-foot">
+      <span class="status-dot"></span>
+      <div><strong>Demo dataset</strong><small>Endpoint not connected</small></div>
+    </div>
+  </aside>
+
+  <main>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">EVENT INTELLIGENCE / 2026</p>
+        <h1>SF Tech Week <span>Signal</span></h1>
+      </div>
+      <div class="header-actions">
+        <button class="btn secondary" id="configureBtn">Configure source</button>
+        <button class="btn primary" id="runBtn">Run classification <span>↗</span></button>
+      </div>
+    </header>
+
+    <section class="notice" aria-label="Dataset status">
+      <span>SNAPSHOT</span>
+      <p>24 events from the official SF Tech Week calendar. Classifications are a rubric-based preview until the API proxy is connected.</p>
+      <a href="https://www.tech-week.com/calendar/sf" target="_blank" rel="noreferrer">View source →</a>
+    </section>
+
+    <div class="view active" id="view-overview">
+    <section class="metrics" aria-label="Classification metrics">
+      <article><div class="metric-label">Events classified <span class="trend">+8</span></div><strong id="eventsCount">24</strong><small>of 24 scraped</small></article>
+      <article><div class="metric-label">Average latency</div><strong id="latencyMetric">1.84<span>s</span></strong><small>p95 2.61s</small></article>
+      <article><div class="metric-label">Average confidence</div><strong id="confidenceMetric">87.3<span>%</span></strong><small>3 low-confidence flags</small></article>
+      <article><div class="metric-label">Token volume</div><strong id="tokenMetric">68.4<span>k</span></strong><small>47.2k in · 21.2k out</small></article>
+    </section>
+
+    <section class="workspace-grid">
+      <article class="panel recommendations">
+        <div class="panel-head">
+          <div><p class="eyebrow">CURATED SHORTLIST</p><h2>Worth your calendar</h2></div>
+          <select id="personaSelect" aria-label="Select attendee persona">
+            <option value="founder">Founder raising</option>
+            <option value="jobseeker">Looking for a job</option>
+            <option value="engineer">Engineer networking</option>
+            <option value="researcher">Researcher</option>
+          </select>
+        </div>
+        <div id="recommendationList" class="recommendation-list"></div>
+      </article>
+
+      <article class="panel distribution">
+        <div class="panel-head"><div><p class="eyebrow">PORTFOLIO VIEW</p><h2>Signal mix</h2></div><button class="icon-btn" aria-label="More chart options">•••</button></div>
+        <div class="donut-wrap">
+          <div class="donut" aria-label="Event category distribution chart"><div><strong>24</strong><span>EVENTS</span></div></div>
+          <div class="legend">
+            <span><i class="c-investor"></i>Investor access <b>7</b></span>
+            <span><i class="c-hiring"></i>Engineering hiring <b>6</b></span>
+            <span><i class="c-research"></i>Research talent <b>4</b></span>
+            <span><i class="c-builder"></i>Builder signal <b>5</b></span>
+            <span><i class="c-noise"></i>Sales pitch / noise <b>2</b></span>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="panel event-table-panel">
+      <div class="panel-head table-title">
+        <div><p class="eyebrow">RECENT RESULTS</p><h2>Classification queue</h2></div>
+        <button class="text-btn" data-view-link="events">View all 24 →</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Event</th><th>Primary signal</th><th>Best for</th><th>Confidence</th><th>Latency</th><th>Verdict</th></tr></thead>
+          <tbody id="overviewRows"></tbody>
+        </table>
+      </div>
+    </section>
+    </div>
+
+    <div class="view" id="view-events">
+      <section class="view-heading">
+        <div><p class="eyebrow">SOURCE SNAPSHOT / OCT 5</p><h2>All classified events</h2><p>Search the imported calendar or filter by the model’s strongest signal.</p></div>
+        <div class="search-wrap"><span>⌕</span><input id="eventSearch" type="search" placeholder="Search event or host…" aria-label="Search events"></div>
+      </section>
+      <div class="filter-row" id="signalFilters">
+        <button class="chip active" data-signal="all">All <b>24</b></button>
+        <button class="chip" data-signal="Investor access">Investor access</button>
+        <button class="chip" data-signal="Engineering hiring">Engineering hiring</button>
+        <button class="chip" data-signal="Research talent">Research talent</button>
+        <button class="chip" data-signal="Builder signal">Builder signal</button>
+        <button class="chip" data-signal="Sales pitch / noise">Sales pitch / noise</button>
+      </div>
+      <section class="panel event-table-panel">
+        <div class="table-wrap"><table><thead><tr><th>Time</th><th>Event / host</th><th>Primary signal</th><th>Best for</th><th>Confidence</th><th>Score</th><th>Verdict</th></tr></thead><tbody id="allEventRows"></tbody></table></div>
+        <div class="empty-state" id="eventEmpty" hidden>No events match this filter.</div>
+      </section>
+    </div>
+
+    <div class="view" id="view-criteria">
+      <section class="view-heading">
+        <div><p class="eyebrow">CLASSIFICATION RUBRIC</p><h2>What counts as signal</h2><p>Each event receives one primary category plus audience-fit scores. Adjust weights before a new run.</p></div>
+        <div class="weight-total">TOTAL WEIGHT <strong id="weightTotal">100%</strong></div>
+      </section>
+      <section class="criteria-grid" id="criteriaGrid"></section>
+      <section class="panel decision-rules">
+        <div class="panel-head"><div><p class="eyebrow">VERDICT LOGIC</p><h2>Calendar threshold</h2></div><span class="model-pill">Qwen/Qwen3.6-35B-A3B</span></div>
+        <div class="rule-row"><span>GO</span><p>Overall utility ≥ 72, confidence ≥ 0.70, and sales-noise probability &lt; 0.55.</p></div>
+        <div class="rule-row"><span>MAYBE</span><p>Utility 55–71, or any result with confidence below 0.70. Route to human review.</p></div>
+        <div class="rule-row"><span>SKIP</span><p>Utility &lt; 55, or sales-noise probability ≥ 0.70 without a strong audience-specific reason.</p></div>
+      </section>
+    </div>
+
+    <div class="view" id="view-model">
+      <section class="view-heading">
+        <div><p class="eyebrow">INFERENCE OPERATIONS</p><h2>Model & pipeline</h2><p>Request contract, throughput, and quality signals for the current classification run.</p></div>
+        <span class="health-badge"><i></i> Demo telemetry</span>
+      </section>
+      <section class="model-grid">
+        <article class="panel model-card">
+          <p class="eyebrow">SELECTED CLASSIFIER</p>
+          <h3>Qwen/Qwen3.6-35B-A3B</h3>
+          <p>Selected for structured multi-label classification and efficient high-volume inference. Gemma remains the benchmark challenger.</p>
+          <dl><div><dt>Endpoint</dt><dd>Recursal dev router</dd></div><div><dt>Input mode</dt><dd>Chat / object state</dd></div><div><dt>Question types</dt><dd>Choice · score · noul</dd></div><div><dt>Output</dt><dd>Answers + confidence + usage</dd></div></dl>
+        </article>
+        <article class="panel pipeline-card">
+          <div class="panel-head"><div><p class="eyebrow">PIPELINE TRACE</p><h2>Per-event latency</h2></div><strong>1.84s</strong></div>
+          <div class="pipeline"><div><span>Fetch page</span><b style="width:8%">140ms</b></div><div><span>Parse event</span><b style="width:5%">90ms</b></div><div><span>Classifier</span><b style="width:78%">1.44s</b></div><div><span>Score + store</span><b style="width:9%">170ms</b></div></div>
+        </article>
+      </section>
+      <section class="metrics model-metrics">
+        <article><div class="metric-label">Input tokens</div><strong>47.2<span>k</span></strong><small>1,967 avg / event</small></article>
+        <article><div class="metric-label">Output tokens</div><strong>21.2<span>k</span></strong><small>883 avg / event</small></article>
+        <article><div class="metric-label">p95 latency</div><strong>2.61<span>s</span></strong><small>1.84s average</small></article>
+        <article><div class="metric-label">Low confidence</div><strong>3</strong><small>requires review</small></article>
+      </section>
+      <section class="panel contract-card">
+        <div class="panel-head"><div><p class="eyebrow">REQUEST CONTRACT</p><h2>Classifier payload</h2></div><button class="text-btn" id="copyPayload">Copy JSON</button></div>
+        <pre id="payloadPreview"><code>{
+  "state": { "event": "&lt;scraped event record&gt;", "persona": "founder_raising" },
+  "model": "Qwen/Qwen3.6-35B-A3B",
+  "questions": {
+    "primary_signal": { "type": "choice", "criteria": { "investor_access": "…", "engineering_hiring": "…", "research_talent": "…", "builder_signal": "…", "sales_noise": "…" } },
+    "worth_attending": { "type": "score", "criteria": ["Skip", "Weak", "Maybe", "Strong", "Must go"] }
+  }
+}</code></pre>
+      </section>
+    </div>
+  </main>
+
+  <div class="modal-backdrop" id="sourceModal" hidden>
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="sourceTitle">
+      <button class="modal-close" id="closeModal" aria-label="Close">×</button>
+      <p class="eyebrow">DATA CONNECTION</p><h2 id="sourceTitle">Configure classification run</h2>
+      <label>Event source URL<input id="sourceUrl" value="https://www.tech-week.com/calendar/sf"></label>
+      <label>Classifier endpoint<input id="endpointUrl" value="https://router-g80r-dev-nest.recursal-dev.com/v1/systemone"></label>
+      <label>Model<select id="modelSelect"><option>Qwen/Qwen3.6-35B-A3B</option><option>google/gemma-4-26B-A4B-it</option></select></label>
+      <div class="secure-note"><span>⌾</span><p><strong>API key stays server-side.</strong> This static preview never stores or sends credentials from the browser.</p></div>
+      <button class="btn primary full" id="saveSource">Save configuration</button>
+    </section>
+  </div>
+  <div class="run-overlay" id="runOverlay" hidden><div class="run-card"><p class="eyebrow">CLASSIFICATION RUN</p><h2 id="runStatus">Fetching calendar…</h2><div class="progress-track"><i id="runProgress"></i></div><p id="runDetail">0 of 24 events</p></div></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
