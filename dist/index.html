@@ -59,8 +59,6 @@
         <button class="chip" data-signal="Investor access">Investor access</button>
         <button class="chip" data-signal="Engineering hiring">Engineering hiring</button>
         <button class="chip" data-signal="Research talent">Research talent</button>
-        <button class="chip" data-signal="Builder signal">Builder signal</button>
-        <button class="chip" data-signal="Community / network">Community / network</button>
         <button class="chip" data-signal="Sales pitch / noise">Sales pitch / noise</button>
       </div>
       <section class="panel event-table-panel">
@@ -95,12 +93,10 @@
         <div class="donut-wrap">
           <div class="donut" aria-label="Event category distribution chart"><div><strong>40</strong><span>EVENTS</span></div></div>
           <div class="legend">
-            <span><i class="c-investor"></i>Investor access <b>8</b></span>
-            <span><i class="c-hiring"></i>Engineering hiring <b>5</b></span>
-            <span><i class="c-research"></i>Research talent <b>8</b></span>
-            <span><i class="c-builder"></i>Builder signal <b>7</b></span>
-            <span><i class="c-community"></i>Community / network <b>7</b></span>
-            <span><i class="c-noise"></i>Sales pitch / noise <b>5</b></span>
+            <span><i class="c-investor"></i>Investor access <b>10</b></span>
+            <span><i class="c-hiring"></i>Engineering hiring <b>11</b></span>
+            <span><i class="c-research"></i>Research talent <b>10</b></span>
+            <span><i class="c-noise"></i>Sales pitch / noise <b>9</b></span>
           </div>
         </div>
       </article>
@@ -149,7 +145,7 @@
   "state": { "event": "&lt;scraped event record&gt;", "persona": "founder_raising" },
   "model": "Qwen/Qwen3.6-35B-A3B",
   "questions": {
-    "primary_signal": { "type": "choice", "criteria": { "investor_access": "…", "engineering_hiring": "…", "research_talent": "…", "builder_signal": "…", "sales_noise": "…" } },
+    "primary_signal": { "type": "choice", "criteria": { "investor_access": "…", "engineering_hiring": "…", "research_talent": "…", "sales_noise": "…" } },
     "worth_attending": { "type": "score", "criteria": ["Skip", "Weak", "Maybe", "Strong", "Must go"] }
   }
 }</code></pre>
