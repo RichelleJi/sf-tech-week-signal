@@ -78,19 +78,13 @@ document.querySelectorAll('.nav-item').forEach(a=>a.addEventListener('click',e=>
 document.querySelector('#personaSelect').addEventListener('change',e=>renderRecommendations(e.target.value));
 document.querySelector('#eventSearch').addEventListener('input',renderAllEvents);
 document.querySelectorAll('[data-signal]').forEach(b=>b.addEventListener('click',()=>{activeSignal=b.dataset.signal;document.querySelectorAll('[data-signal]').forEach(x=>x.classList.toggle('active',x===b));renderAllEvents()}));
-const modal=document.querySelector('#sourceModal');
-function openModal(){modal.hidden=false;document.querySelector('#sourceUrl').focus()}
-function closeModal(){modal.hidden=true}
-document.querySelector('#configureBtn').addEventListener('click',openModal);
-document.querySelector('#closeModal').addEventListener('click',closeModal);
-modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});
-document.querySelector('#saveSource').addEventListener('click',()=>{closeModal();showToast('Configuration saved for this session')});
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
 document.querySelector('#runBtn').addEventListener('click',runClassification);
 function runClassification(){
- const overlay=document.querySelector('#runOverlay'),bar=document.querySelector('#runProgress'),status=document.querySelector('#runStatus'),detail=document.querySelector('#runDetail');
- overlay.hidden=false;let step=0;const stages=['Fetching calendar…','Normalizing event records…','Classifying with Qwen…','Ranking by persona…'];
- const timer=setInterval(()=>{step++;const pct=Math.min(step*8,100);bar.style.width=`${pct}%`;detail.textContent=`${Math.min(Math.round(pct/100*40),40)} of 40 events`;status.textContent=stages[Math.min(Math.floor(pct/27),3)];if(pct===100){clearInterval(timer);setTimeout(()=>{overlay.hidden=true;bar.style.width='0';showToast('40 events classified · recommendations updated')},500)}},120);
+ const panel=document.querySelector('#runPanel'),bar=document.querySelector('#runProgress'),status=document.querySelector('#runStatus'),detail=document.querySelector('#runDetail'),state=document.querySelector('#runState'),button=document.querySelector('#runBtn');
+ const model=document.querySelector('#modelSelect').value.split('/').pop();
+ panel.classList.add('running');state.textContent='RUNNING';button.disabled=true;let step=0;
+ const stages=['Fetching calendar…','Normalizing event records…',`Classifying with ${model}…`,'Ranking by persona…'];
+ const timer=setInterval(()=>{step++;const pct=Math.min(step*8,100);bar.style.width=`${pct}%`;detail.textContent=`${Math.min(Math.round(pct/100*40),40)} of 40 events · ${pct}%`;status.textContent=stages[Math.min(Math.floor(pct/27),3)];if(pct===100){clearInterval(timer);setTimeout(()=>{panel.classList.remove('running');panel.classList.add('complete');state.textContent='COMPLETE';status.textContent='Classification complete';detail.textContent='40 events ranked and ready';button.disabled=false;showToast('40 events classified · results updated')},450)}},120);
 }
 document.querySelector('#copyPayload').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(document.querySelector('#payloadPreview').innerText);showToast('Request payload copied')}catch{showToast('Copy unavailable in this preview')}});
 function showToast(message){const t=document.querySelector('#toast');t.textContent=message;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400)}

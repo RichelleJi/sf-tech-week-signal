@@ -12,7 +12,7 @@
   <aside class="sidebar">
     <div class="brand"><span class="brand-mark">S/</span><span>Signal</span></div>
     <nav aria-label="Page sections">
-      <a class="nav-item" href="#criteria"><span>◎</span> Criteria</a>
+      <a class="nav-item" href="#criteria"><span>◎</span> Run setup</a>
       <a class="nav-item active" href="#overview"><span>⌁</span> Overview</a>
       <a class="nav-item" href="#events"><span>▤</span> All events <b>40</b></a>
       <a class="nav-item" href="#model"><span>⌘</span> Model & process</a>
@@ -29,10 +29,6 @@
         <p class="eyebrow">EVENT INTELLIGENCE / 2026</p>
         <h1>SF Tech Week <span>Signal</span></h1>
       </div>
-      <div class="header-actions">
-        <button class="btn secondary" id="configureBtn">Configure source</button>
-        <button class="btn primary" id="runBtn">Run classification <span>↗</span></button>
-      </div>
     </header>
 
     <section class="notice" aria-label="Dataset status">
@@ -41,12 +37,26 @@
       <a href="https://www.tech-week.com/calendar/sf" target="_blank" rel="noreferrer">View source →</a>
     </section>
 
-    <div class="view compact-rubric" id="criteria">
-      <section class="view-heading">
-        <div><p class="eyebrow">CLASSIFICATION RUBRIC</p><h2>What counts as signal</h2><p>Each event receives one primary category plus audience-fit scores. Adjust weights before a new run.</p></div>
-        <div class="weight-total">TOTAL WEIGHT <strong id="weightTotal">100%</strong></div>
+    <div class="view compact-rubric run-console" id="criteria">
+      <section class="run-console-head">
+        <div><p class="eyebrow">CLASSIFICATION RUN</p><h2>Configure, weight, classify</h2><p>Every input that changes a run lives here. Tune the rubric, choose the model, then watch the pipeline execute.</p></div>
+        <div class="run-actions">
+          <div class="weight-total">TOTAL WEIGHT <strong id="weightTotal">100%</strong></div>
+          <button class="btn primary" id="runBtn">Run classification <span>↗</span></button>
+        </div>
       </section>
+      <section class="run-config" aria-label="Classification configuration">
+        <label><span>Event source</span><input id="sourceUrl" value="https://www.tech-week.com/calendar/sf"></label>
+        <label><span>Classifier endpoint</span><input id="endpointUrl" value="https://router-g80r-dev-nest.recursal-dev.com/v1/systemone"></label>
+        <label><span>Model</span><select id="modelSelect"><option>Qwen/Qwen3.6-35B-A3B</option><option>google/gemma-4-26B-A4B-it</option></select></label>
+      </section>
+      <div class="rubric-label"><div><p class="eyebrow">CLASSIFICATION RUBRIC</p><h3>What counts as signal</h3></div><small>Drag any weight before running</small></div>
       <section class="criteria-grid" id="criteriaGrid"></section>
+      <section class="inline-runner" id="runPanel" aria-live="polite">
+        <div class="runner-copy"><span class="runner-state" id="runState">READY</span><strong id="runStatus">Waiting for a run</strong><small id="runDetail">40 events queued</small></div>
+        <div class="progress-track"><i id="runProgress"></i></div>
+      </section>
+      <p class="secure-line">API credentials stay server-side; this preview never stores a key in the browser.</p>
     </div>
 
     <div class="view" id="events">
@@ -160,18 +170,6 @@
     </section>
   </main>
 
-  <div class="modal-backdrop" id="sourceModal" hidden>
-    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="sourceTitle">
-      <button class="modal-close" id="closeModal" aria-label="Close">×</button>
-      <p class="eyebrow">DATA CONNECTION</p><h2 id="sourceTitle">Configure classification run</h2>
-      <label>Event source URL<input id="sourceUrl" value="https://www.tech-week.com/calendar/sf"></label>
-      <label>Classifier endpoint<input id="endpointUrl" value="https://router-g80r-dev-nest.recursal-dev.com/v1/systemone"></label>
-      <label>Model<select id="modelSelect"><option>Qwen/Qwen3.6-35B-A3B</option><option>google/gemma-4-26B-A4B-it</option></select></label>
-      <div class="secure-note"><span>⌾</span><p><strong>API key stays server-side.</strong> This static preview never stores or sends credentials from the browser.</p></div>
-      <button class="btn primary full" id="saveSource">Save configuration</button>
-    </section>
-  </div>
-  <div class="run-overlay" id="runOverlay" hidden><div class="run-card"><p class="eyebrow">CLASSIFICATION RUN</p><h2 id="runStatus">Fetching calendar…</h2><div class="progress-track"><i id="runProgress"></i></div><p id="runDetail">0 of 24 events</p></div></div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script src="app.js"></script>
 </body>
