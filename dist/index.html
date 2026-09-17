@@ -13,7 +13,7 @@
     <div class="brand"><span class="brand-mark">S/</span><span>Signal</span></div>
     <div class="sidebar-menus">
       <details class="sidebar-menu" open>
-        <summary><span>◎</span> Classification run</summary>
+        <summary><span>◎</span> Classification</summary>
         <div class="sidebar-menu-body run-actions">
           <label class="model-switch" for="modelSelect"><span>MODEL IN USE</span><select id="modelSelect" aria-label="Classifier model"><option>Qwen/Qwen3.6-35B-A3B</option><option>google/gemma-4-26B-A4B-it</option></select></label>
           <div class="run-control-row">
@@ -33,7 +33,7 @@
         </div>
       </details>
       <details class="sidebar-menu sidebar-live" id="criteria" open>
-        <summary><span>◉</span> Live processing</summary>
+        <summary><span>◉</span> Status</summary>
         <div class="sidebar-menu-body">
           <section class="live-processing" id="runPanel" aria-live="polite">
             <div class="processed-bar"><div class="processed-meta"><span>PROCESSED <strong id="processedCount">0 / 40</strong></span><span><span class="runner-state" id="runState">READY</span> <b id="runDetail">0%</b></span></div><div class="progress-track"><i id="runProgress"></i></div></div>
@@ -51,7 +51,7 @@
         </div>
       </details>
       <details class="sidebar-menu sidebar-rubric rubric-pane" id="rubric">
-        <summary><span>≋</span> What counts as signal</summary>
+        <summary><span>≋</span> Rubric</summary>
         <div class="sidebar-menu-body"><div class="criteria-grid" id="criteriaGrid"></div></div>
       </details>
     </div>
