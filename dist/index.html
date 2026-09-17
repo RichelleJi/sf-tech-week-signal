@@ -35,6 +35,25 @@
         <summary><span>≋</span> What counts as signal</summary>
         <div class="sidebar-menu-body"><div class="criteria-grid" id="criteriaGrid"></div></div>
       </details>
+      <details class="sidebar-menu sidebar-live" id="criteria" open>
+        <summary><span>◉</span> Live processing</summary>
+        <div class="sidebar-menu-body">
+          <section class="live-processing" id="runPanel" aria-live="polite">
+            <div class="live-head"><h3>Run telemetry</h3><span class="runner-state" id="runState">READY</span></div>
+            <div class="processed-bar"><div class="processed-meta"><span>PROCESSED <strong id="processedCount">0 / 40</strong></span><span id="runDetail">0%</span></div><div class="progress-track"><i id="runProgress"></i></div></div>
+            <div class="token-meter">
+              <div class="token-total"><span>TOTAL TOKENS</span><strong id="totalTokens">0</strong></div>
+              <div class="token-track" aria-label="Input and output token usage"><i class="token-in" id="tokenInBar"></i><i class="token-out" id="tokenOutBar"></i></div>
+              <div class="token-legend"><span><i class="token-in"></i>Tokens in <b id="inputTokens">0</b></span><span><i class="token-out"></i>Tokens out <b id="outputTokens">0</b></span></div>
+            </div>
+            <div class="model-activity"><span class="activity-pulse"></span><div><small>MODEL ACTIVITY</small><strong id="runStatus">Waiting for a run</strong><p id="modelActivity">Ready to evaluate event records against the classification rubric.</p></div></div>
+            <div class="live-portfolio">
+              <div class="portfolio-live-head"><div><p class="eyebrow">PORTFOLIO VIEW</p><h3>Signal mix</h3></div><small>Rendering live</small></div>
+              <div class="donut-wrap"><div class="donut live-donut" id="liveMixPie" role="img" aria-label="No events classified yet"><div><strong id="liveMixTotal">0</strong><span>EVENTS</span></div></div><div class="legend"><span><i class="c-investor"></i>Investor access <b id="mixInvestor">0</b></span><span><i class="c-hiring"></i>Engineer talent <b id="mixEngineer">0</b></span><span><i class="c-research"></i>Research talent <b id="mixResearch">0</b></span><span><i class="c-jobs"></i>Looking for a job <b id="mixJobs">0</b></span><span><i class="c-noise"></i>Sales pitch / noise <b id="mixNoise">0</b></span></div></div>
+            </div>
+          </section>
+        </div>
+      </details>
     </div>
     <div class="sidebar-foot">
       <span class="status-dot"></span>
@@ -55,26 +74,6 @@
       <p>40 events from the official SF Tech Week calendar. Classifications are a rubric-based preview until the API proxy is connected.</p>
       <a href="https://www.tech-week.com/calendar/sf" target="_blank" rel="noreferrer">View source →</a>
     </section>
-
-    <div class="view live-run-view" id="criteria">
-      <section class="live-processing" id="runPanel" aria-live="polite">
-        <div class="live-head"><div><p class="eyebrow">LIVE PROCESSING</p><h3>Run telemetry</h3></div><span class="runner-state" id="runState">READY</span></div>
-        <div class="processed-bar"><div class="processed-meta"><span>PROCESSED <strong id="processedCount">0 / 40</strong></span><span id="runDetail">0%</span></div><div class="progress-track"><i id="runProgress"></i></div></div>
-        <div class="token-meter">
-          <div class="token-total"><span>TOTAL TOKENS</span><strong id="totalTokens">0</strong></div>
-          <div class="token-track" aria-label="Input and output token usage"><i class="token-in" id="tokenInBar"></i><i class="token-out" id="tokenOutBar"></i></div>
-          <div class="token-legend"><span><i class="token-in"></i>Tokens in <b id="inputTokens">0</b></span><span><i class="token-out"></i>Tokens out <b id="outputTokens">0</b></span></div>
-        </div>
-        <div class="model-activity"><span class="activity-pulse"></span><div><small>MODEL ACTIVITY</small><strong id="runStatus">Waiting for a run</strong><p id="modelActivity">Ready to evaluate event records against the classification rubric.</p></div></div>
-        <div class="live-portfolio">
-          <div class="portfolio-live-head"><div><p class="eyebrow">PORTFOLIO VIEW</p><h3>Signal mix</h3></div><small>Rendering live</small></div>
-          <div class="donut-wrap">
-            <div class="donut live-donut" id="liveMixPie" role="img" aria-label="No events classified yet"><div><strong id="liveMixTotal">0</strong><span>EVENTS</span></div></div>
-            <div class="legend"><span><i class="c-investor"></i>Investor access <b id="mixInvestor">0</b></span><span><i class="c-hiring"></i>Engineer talent <b id="mixEngineer">0</b></span><span><i class="c-research"></i>Research talent <b id="mixResearch">0</b></span><span><i class="c-jobs"></i>Looking for a job <b id="mixJobs">0</b></span><span><i class="c-noise"></i>Sales pitch / noise <b id="mixNoise">0</b></span></div>
-          </div>
-        </div>
-      </section>
-    </div>
 
     <div class="view" id="events">
       <section class="view-heading">
