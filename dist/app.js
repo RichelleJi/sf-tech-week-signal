@@ -79,6 +79,7 @@ document.querySelector('#personaSelect').addEventListener('change',e=>renderReco
 document.querySelector('#eventSearch').addEventListener('input',renderAllEvents);
 document.querySelectorAll('[data-signal]').forEach(b=>b.addEventListener('click',()=>{activeSignal=b.dataset.signal;document.querySelectorAll('[data-signal]').forEach(x=>x.classList.toggle('active',x===b));renderAllEvents()}));
 document.querySelector('#runBtn').addEventListener('click',runClassification);
+document.querySelector('#modelSelect').addEventListener('change',e=>{document.querySelector('#configCurrent').textContent=`SF calendar · ${e.target.value.includes('Qwen')?'Qwen3.6':'Gemma 4'}`});
 function runClassification(){
  const panel=document.querySelector('#runPanel'),bar=document.querySelector('#runProgress'),status=document.querySelector('#runStatus'),detail=document.querySelector('#runDetail'),state=document.querySelector('#runState'),button=document.querySelector('#runBtn');
  const model=document.querySelector('#modelSelect').value.split('/').pop();
