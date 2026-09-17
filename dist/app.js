@@ -81,9 +81,10 @@ document.querySelectorAll('[data-signal]').forEach(b=>b.addEventListener('click'
 document.querySelector('#runBtn').addEventListener('click',runClassification);
 document.querySelector('#modelSelect').addEventListener('change',e=>{document.querySelector('#configCurrent').textContent=`SF calendar · ${e.target.value.includes('Qwen')?'Qwen3.6':'Gemma 4'}`});
 function updateLiveSignalMix(processed){
- const signals=[['Investor access','mixInvestor'],['Engineer talent','mixEngineer'],['Research talent','mixResearch'],['Looking for a job','mixJobs'],['Sales pitch / noise','mixNoise']];
+ const signals=[['Investor access','mixInvestor','var(--acid)'],['Engineer talent','mixEngineer','var(--cyan)'],['Research talent','mixResearch','var(--blue)'],['Looking for a job','mixJobs','#d58cff'],['Sales pitch / noise','mixNoise','var(--red)']];
  const sample=events.slice(0,processed);
- signals.forEach(([signal,id])=>{const count=sample.filter(e=>e.signal===signal).length;document.querySelector(`#${id}`).textContent=count;document.querySelector(`#${id}Bar`).style.width=processed?`${count/processed*100}%`:'0%'});
+ let cursor=0;const slices=signals.map(([signal,id,color])=>{const count=sample.filter(e=>e.signal===signal).length,start=cursor,end=cursor+(processed?count/processed*100:0);cursor=end;document.querySelector(`#${id}`).textContent=count;return `${color} ${start}% ${end}%`});
+ const pie=document.querySelector('#liveMixPie');pie.style.background=processed?`conic-gradient(${slices.join(',')})`:'#242c31';pie.setAttribute('aria-label',processed?`Signal mix for ${processed} processed events`:'No events classified yet');
 }
 function runClassification(){
  const panel=document.querySelector('#runPanel'),bar=document.querySelector('#runProgress'),status=document.querySelector('#runStatus'),detail=document.querySelector('#runDetail'),state=document.querySelector('#runState'),button=document.querySelector('#runBtn'),processedCount=document.querySelector('#processedCount'),inputTokens=document.querySelector('#inputTokens'),outputTokens=document.querySelector('#outputTokens'),totalTokens=document.querySelector('#totalTokens'),activity=document.querySelector('#modelActivity');
