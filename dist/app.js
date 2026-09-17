@@ -1,24 +1,24 @@
 const rawEvents = [
  ['6:15am','Science x AI Breakfast','Endpoint Arena','Research talent','Researchers',91,90,'GO'],
  ['7:00am',"The 7AM Club: Tech Week Founders' Run",'Leverage, Tavily','Investor access','Founders raising',83,84,'GO'],
- ['7:30am','Run Tech Club | Signal Run','Run Tech Club','Engineering hiring','Job seekers',72,67,'MAYBE'],
- ['8:00am','Bots, Bagels & Brews','Startup Grind, Bright Data','Engineering hiring','Engineers',88,86,'GO'],
+ ['7:30am','Run Tech Club | Signal Run','Run Tech Club','Engineer talent','Job seekers',72,67,'MAYBE'],
+ ['8:00am','Bots, Bagels & Brews','Startup Grind, Bright Data','Engineer talent','Engineers',88,86,'GO'],
  ['8:00am','Women Founders, Funders, & Operators Walk','The Investment Committee','Investor access','Founders raising',93,94,'GO'],
  ['8:00am','1,200 Free Coffees | Brewbird x Flex','Flex','Sales pitch / noise','General networking',89,42,'SKIP'],
- ['8:30am','Robots & Hardware Coffee @Tesla Showroom','Leverage','Engineering hiring','Engineers',86,87,'GO'],
+ ['8:30am','Robots & Hardware Coffee @Tesla Showroom','Leverage','Engineer talent','Engineers',86,87,'GO'],
  ['8:30am',"Bria × fal × LTX: What's New in Open-Weights Pipelines",'Bria, fal, LTX','Research talent','Researchers',94,95,'GO'],
  ['8:30am','Physical AI Founders & Investors Breakfast','Raisable','Investor access','Founders raising',95,97,'GO'],
- ['9:00am','Matched by Verci','Verci','Engineering hiring','Job seekers',74,69,'MAYBE'],
- ['9:00am','Coffee Rave for AI Builders','EchoHer','Engineering hiring','Engineers',84,82,'GO'],
+ ['9:00am','Matched by Verci','Verci','Engineer talent','Job seekers',74,69,'MAYBE'],
+ ['9:00am','Coffee Rave for AI Builders','EchoHer','Engineer talent','Engineers',84,82,'GO'],
  ['9:00am',"Founders' Coffee",'Y·US Ventures, Bridgit','Investor access','Founders raising',87,90,'GO'],
- ['9:00am','Hardware Founders and Builders Breakfast','Byteforge Systems','Engineering hiring','Engineers',91,92,'GO'],
+ ['9:00am','Hardware Founders and Builders Breakfast','Byteforge Systems','Engineer talent','Engineers',91,92,'GO'],
  ['9:00am','Welcome Breakfast w/ Deel, AWS & Ramp','Deel, AWS, Ramp','Sales pitch / noise','General networking',92,38,'SKIP'],
- ['9:00am','Supporting Tech Teams Through Rapid Growth','STRATIVIS','Engineering hiring','Hiring managers',78,73,'GO'],
+ ['9:00am','Supporting Tech Teams Through Rapid Growth','STRATIVIS','Engineer talent','Hiring managers',78,73,'GO'],
  ['9:00am','How Much Should AI Know About You?','Consulate General of Switzerland','Research talent','Researchers',82,80,'GO'],
  ['9:30am','The MCP Gateway','Agentic Fabriq, Open Future Forum','Research talent','Engineers',89,88,'GO'],
  ['10:00am','Shaping What’s Next with Techstars, Zendesk & DigitalOcean','Techstars, DigitalOcean, Zendesk','Investor access','Founders raising',88,89,'GO'],
  ['10:00am','Growth Teardown: 5 Companies in 60 Minutes','Juliet AI','Sales pitch / noise','Growth teams',76,51,'SKIP'],
- ['10:00am','AI Native in Half a Day','Corporate Accelerator Forum, USF','Engineering hiring','Job seekers',71,70,'MAYBE'],
+ ['10:00am','AI Native in Half a Day','Corporate Accelerator Forum, USF','Engineer talent','Job seekers',71,70,'MAYBE'],
  ['10:00am','Frontier Science AI Hackathon','Cinnamon Sipper','Research talent','Researchers',86,91,'GO'],
  ['10:00am','From Term Sheet To Cap Table','Qapita','Investor access','Founders raising',85,83,'GO'],
  ['11:00am','Founder Social Club Pop Up Cafe','Founder Social Club','Investor access','Founders raising',73,72,'GO'],
@@ -27,13 +27,13 @@ const rawEvents = [
  ['Featured','Watts & Wisdom: An Evening with Filippo Pozzato','a16z, Rillet','Investor access','Founders raising',77,75,'GO'],
  ['Featured','Building the Future of Preventive Health','Fenwick & West','Research talent','Researchers',84,83,'GO'],
  ['Featured',"GTM Panel: What's Working Right Now",'Skillsheet','Sales pitch / noise','Sales teams',86,48,'SKIP'],
- ['Featured','Hack Alcatraz with Cloudflare and Kling AI','Cloudflare, Kling AI','Engineering hiring','Engineers',93,94,'GO'],
- ['Featured','Official Tech Week Kickoff','Fireworks, Stripe, Vercel','Engineering hiring','Job seekers',89,88,'GO'],
+ ['Featured','Hack Alcatraz with Cloudflare and Kling AI','Cloudflare, Kling AI','Engineer talent','Engineers',93,94,'GO'],
+ ['Featured','Official Tech Week Kickoff','Fireworks, Stripe, Vercel','Engineer talent','Job seekers',89,88,'GO'],
  ['Featured','Meet the Lab: Mistral','Mistral','Research talent','Researchers',95,96,'GO'],
  ['Featured','Claude Founder House','Anthropic','Investor access','Founders raising',92,93,'GO'],
  ['Featured','a16z & Friends: Morning Bike Ride','a16z','Investor access','Founders raising',78,80,'GO'],
  ['Featured','Advancing Collaborative AI Drug Discovery','a16z, Lilly','Research talent','Researchers',94,95,'GO'],
- ['6:00am',"Niural AI's Quiet Room",'Niural AI','Engineering hiring','Job seekers',80,74,'GO'],
+ ['6:00am',"Niural AI's Quiet Room",'Niural AI','Engineer talent','Job seekers',80,74,'GO'],
  ['6:30am','Sunrise Storytelling','Need To Film Ltd','Sales pitch / noise','Creators',71,64,'MAYBE'],
  ['7:00am','Clementino Classic','Domu','Sales pitch / noise','General networking',68,61,'MAYBE'],
  ['7:00am','Sunrise Cold Plunge with Soma','Soma','Sales pitch / noise','General networking',75,63,'MAYBE'],
@@ -44,7 +44,7 @@ const events=rawEvents.map((e,i)=>({id:i+1,time:e[0],name:e[1],host:e[2],signal:
 const personaOrder={founder:[8,4,11],jobseeker:[2,9,14],engineer:[7,12,16],researcher:[7,0,20]};
 const criteria=[
  ['Investor access','I','Partner, principal, angel, or allocator density; fundraising intent; small-group access.',22,'positive'],
- ['Engineering hiring','E','Hiring managers, technical leaders, active roles, and formats that enable real evaluation.',18,'positive'],
+ ['Engineer talent','E','Hiring managers, technical leaders, active roles, and formats that enable real evaluation.',18,'positive'],
  ['Research talent','R','Researchers, paper authors, labs, frontier-model teams, and substantive technical depth.',15,'positive'],
  ['Food quality','F','Substantial, well-reviewed food that supports the event format—not just snack-table bait.',9,'positive'],
  ['Exclusivity','X','Meaningful curation, relevant invitees, limited capacity, and credible access barriers.',10,'positive'],
@@ -100,6 +100,6 @@ function registerAgentTools(){
  const controller=new AbortController();
  const register=(tool)=>Promise.resolve(context.registerTool(tool,{signal:controller.signal})).catch(()=>{});
  register({name:'navigate_signal_dashboard',title:'Navigate Signal dashboard',description:'Open a dashboard view: overview, events, criteria, or model process.',inputSchema:{type:'object',properties:{view:{type:'string',enum:['overview','events','criteria','model']}},required:['view'],additionalProperties:false},annotations:{readOnlyHint:true,untrustedContentHint:false},execute(input){if(!['overview','events','criteria','model'].includes(input?.view))throw new Error('Invalid view');switchView(input.view);return{view:input.view,status:'visible'}}});
- register({name:'filter_sf_tech_week_events',title:'Filter SF Tech Week events',description:'Filter the visible event table by search text and optional primary signal.',inputSchema:{type:'object',properties:{query:{type:'string'},signal:{type:'string',enum:['all','Investor access','Engineering hiring','Research talent','Sales pitch / noise']}},additionalProperties:false},annotations:{readOnlyHint:true,untrustedContentHint:false},execute(input){switchView('events');activeSignal=input?.signal||'all';document.querySelector('#eventSearch').value=input?.query||'';document.querySelectorAll('[data-signal]').forEach(x=>x.classList.toggle('active',x.dataset.signal===activeSignal));renderAllEvents();return{matches:document.querySelectorAll('#allEventRows tr').length,signal:activeSignal,query:input?.query||''}}});
+ register({name:'filter_sf_tech_week_events',title:'Filter SF Tech Week events',description:'Filter the visible event table by search text and optional primary signal.',inputSchema:{type:'object',properties:{query:{type:'string'},signal:{type:'string',enum:['all','Investor access','Engineer talent','Research talent','Sales pitch / noise']}},additionalProperties:false},annotations:{readOnlyHint:true,untrustedContentHint:false},execute(input){switchView('events');activeSignal=input?.signal||'all';document.querySelector('#eventSearch').value=input?.query||'';document.querySelectorAll('[data-signal]').forEach(x=>x.classList.toggle('active',x.dataset.signal===activeSignal));renderAllEvents();return{matches:document.querySelectorAll('#allEventRows tr').length,signal:activeSignal,query:input?.query||''}}});
 }
 registerAgentTools();
