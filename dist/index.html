@@ -68,9 +68,12 @@
           <div class="token-legend"><span><i class="token-in"></i>Tokens in <b id="inputTokens">0</b></span><span><i class="token-out"></i>Tokens out <b id="outputTokens">0</b></span></div>
         </div>
         <div class="model-activity"><span class="activity-pulse"></span><div><small>MODEL ACTIVITY</small><strong id="runStatus">Waiting for a run</strong><p id="modelActivity">Ready to evaluate event records against the classification rubric.</p></div></div>
-        <div class="live-signal-mix">
-          <div class="mix-head"><span>SIGNAL MIX</span><small>Updates after every classified event</small></div>
-          <div class="mix-layout"><div class="mix-pie" id="liveMixPie" role="img" aria-label="No events classified yet"></div><div class="mix-legend"><span><i class="mix-investor"></i>Investor <b id="mixInvestor">0</b></span><span><i class="mix-engineer"></i>Engineer <b id="mixEngineer">0</b></span><span><i class="mix-research"></i>Research <b id="mixResearch">0</b></span><span><i class="mix-jobs"></i>Job seeker <b id="mixJobs">0</b></span><span><i class="mix-noise"></i>Sales noise <b id="mixNoise">0</b></span></div></div>
+        <div class="live-portfolio">
+          <div class="portfolio-live-head"><div><p class="eyebrow">PORTFOLIO VIEW</p><h3>Signal mix</h3></div><small>Rendering live</small></div>
+          <div class="donut-wrap">
+            <div class="donut live-donut" id="liveMixPie" role="img" aria-label="No events classified yet"><div><strong id="liveMixTotal">0</strong><span>EVENTS</span></div></div>
+            <div class="legend"><span><i class="c-investor"></i>Investor access <b id="mixInvestor">0</b></span><span><i class="c-hiring"></i>Engineer talent <b id="mixEngineer">0</b></span><span><i class="c-research"></i>Research talent <b id="mixResearch">0</b></span><span><i class="c-jobs"></i>Looking for a job <b id="mixJobs">0</b></span><span><i class="c-noise"></i>Sales pitch / noise <b id="mixNoise">0</b></span></div>
+          </div>
         </div>
       </section>
     </div>
@@ -101,7 +104,7 @@
       <article><div class="metric-label">Token volume</div><strong id="tokenMetric">114<span>k</span></strong><small>78.7k in · 35.3k out</small></article>
     </section>
 
-    <section class="workspace-grid">
+    <section class="workspace-grid shortlist-only">
       <article class="panel recommendations">
         <div class="panel-head">
           <div><p class="eyebrow">CURATED SHORTLIST</p><h2>Worth your calendar</h2></div>
@@ -115,19 +118,6 @@
         <div id="recommendationList" class="recommendation-list"></div>
       </article>
 
-      <article class="panel distribution">
-        <div class="panel-head"><div><p class="eyebrow">PORTFOLIO VIEW</p><h2>Signal mix</h2></div><button class="icon-btn" aria-label="More chart options">•••</button></div>
-        <div class="donut-wrap">
-          <div class="donut" aria-label="Event category distribution chart"><div><strong>40</strong><span>EVENTS</span></div></div>
-          <div class="legend">
-            <span><i class="c-investor"></i>Investor access <b>10</b></span>
-            <span><i class="c-hiring"></i>Engineer talent <b>6</b></span>
-            <span><i class="c-research"></i>Research talent <b>10</b></span>
-            <span><i class="c-jobs"></i>Looking for a job <b>5</b></span>
-            <span><i class="c-noise"></i>Sales pitch / noise <b>9</b></span>
-          </div>
-        </div>
-      </article>
     </section>
 
     <section class="panel event-table-panel">
