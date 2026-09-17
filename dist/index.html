@@ -28,7 +28,7 @@
                 <p class="secure-line">API credentials stay server-side; this preview never stores a key in the browser.</p>
               </div>
             </details>
-            <button class="btn primary" id="runBtn">Run classification <span>↗</span></button>
+            <button class="btn primary" id="runBtn">Run <span>↗</span></button>
           </div>
         </div>
       </details>
@@ -89,8 +89,6 @@
         <button class="chip" data-signal="Sales pitch / noise">Sales pitch / noise</button>
       </div>
       <section class="panel event-table-panel">
-        <div class="event-render-head"><span>Classification stream</span><b id="eventStreamCount">40 / 40 rendered</b></div>
-        <div class="event-stream" id="eventStream" role="progressbar" aria-label="Events rendered" aria-valuemin="0" aria-valuemax="40" aria-valuenow="40"></div>
         <div class="table-wrap"><table><thead><tr><th>Time</th><th>Event / host</th><th>Primary signal</th><th>Best for</th><th>Vibe</th><th>Verdict</th></tr></thead><tbody id="allEventRows"></tbody></table></div>
         <div class="empty-state" id="eventEmpty" hidden>No events match this filter.</div>
       </section>

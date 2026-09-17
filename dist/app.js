@@ -65,8 +65,6 @@ function renderRows(){document.querySelector('#overviewRows').innerHTML=events.s
 let activeSignal='all';
 let processedEvents=40;
 let classificationRunning=false;
-const streamClass={'Investor access':'investor','Engineer talent':'engineer','Research talent':'research','Looking for a job':'jobs','Sales pitch / noise':'noise'};
-function renderEventStream(){document.querySelector('#eventStream').innerHTML=events.map(e=>`<i class="stream-${streamClass[e.signal]} is-rendered" aria-hidden="true"></i>`).join('')}
 function updateEventRendering(processed){
  processedEvents=processed;
  document.querySelectorAll('#allEventRows tr,#overviewRows tr').forEach(row=>{
@@ -74,10 +72,6 @@ function updateEventRendering(processed){
   row.classList.toggle('event-classified',done);row.classList.toggle('event-active',active);row.classList.toggle('event-queued',!done&&!active);
   const vibe=row.querySelector('.score-cell');if(vibe)vibe.textContent=done?vibe.dataset.vibe:active?'···':'—';
  });
- document.querySelectorAll('#eventStream i').forEach((segment,index)=>{segment.classList.toggle('is-rendered',index<processed);segment.classList.toggle('is-active',classificationRunning&&index===processed)});
- const count=document.querySelector('#eventStreamCount'),stream=document.querySelector('#eventStream');
- if(count)count.textContent=`${processed} / ${events.length} rendered`;
- if(stream){stream.setAttribute('aria-valuenow',processed);stream.setAttribute('aria-label',`${processed} of ${events.length} events rendered`)}
  const eventsCount=document.querySelector('#eventsCount');if(eventsCount)eventsCount.textContent=processed;
  document.querySelector('.event-table-panel')?.classList.toggle('is-classifying',classificationRunning);
 }
@@ -116,7 +110,7 @@ function runClassification(){
 }
 document.querySelector('#copyPayload').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(document.querySelector('#payloadPreview').innerText);showToast('Request payload copied')}catch{showToast('Copy unavailable in this preview')}});
 function showToast(message){const t=document.querySelector('#toast');t.textContent=message;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400)}
-renderEventStream();renderRecommendations();renderRows();renderAllEvents();renderCriteria();
+renderRecommendations();renderRows();renderAllEvents();renderCriteria();
 function registerAgentTools(){
  const context=document.modelContext;
  if(!context?.registerTool)return;
