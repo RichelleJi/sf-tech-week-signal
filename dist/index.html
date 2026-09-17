@@ -57,8 +57,11 @@
           <button class="btn primary" id="runBtn">Run classification <span>↗</span></button>
         </div>
       </section>
-      <div class="rubric-label"><div><p class="eyebrow">CLASSIFICATION RUBRIC</p><h3>What counts as signal</h3></div><small>Drag any weight before running</small></div>
-      <section class="criteria-grid" id="criteriaGrid"></section>
+      <div class="run-workspace">
+      <section class="rubric-pane">
+        <div class="rubric-label"><div><p class="eyebrow">CLASSIFICATION RUBRIC</p><h3>What counts as signal</h3></div><small>Drag any weight before running</small></div>
+        <div class="criteria-grid" id="criteriaGrid"></div>
+      </section>
       <section class="live-processing" id="runPanel" aria-live="polite">
         <div class="live-head"><div><p class="eyebrow">LIVE PROCESSING</p><h3>Run telemetry</h3></div><span class="runner-state" id="runState">READY</span></div>
         <div class="processed-bar"><div class="processed-meta"><span>PROCESSED <strong id="processedCount">0 / 40</strong></span><span id="runDetail">0%</span></div><div class="progress-track"><i id="runProgress"></i></div></div>
@@ -76,6 +79,7 @@
           </div>
         </div>
       </section>
+      </div>
     </div>
 
     <div class="view" id="events">
