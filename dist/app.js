@@ -70,8 +70,8 @@ function renderAllEvents(){
  document.querySelector('#eventEmpty').hidden=filtered.length>0;
 }
 function renderCriteria(){
- document.querySelector('#criteriaGrid').innerHTML=criteria.map((c,i)=>`<article class="panel criterion"><div class="criterion-top"><div><h3 class="${c[4]}">${c[0]}</h3><p>${c[2]}</p></div><span class="criterion-icon">${c[1]}</span></div><div class="criterion-controls"><input type="range" min="0" max="40" value="${c[3]}" data-weight="${i}" aria-label="${c[0]} weight"><output>${c[3]}%</output></div></article>`).join('');
- document.querySelectorAll('[data-weight]').forEach(input=>input.addEventListener('input',e=>{criteria[+e.target.dataset.weight][3]=+e.target.value;e.target.nextElementSibling.value=`${e.target.value}%`;document.querySelector('#weightTotal').textContent=`${criteria.reduce((s,c)=>s+c[3],0)}%`}));
+ document.querySelector('#criteriaGrid').innerHTML=criteria.map((c,i)=>`<article class="panel criterion"><div class="criterion-top"><div><h3 class="${c[4]}">${c[0]}</h3><p>${c[2]}</p></div><span class="criterion-icon">${c[1]}</span></div><div class="criterion-controls"><input class="${c[4]}" type="range" min="0" max="40" value="${c[3]}" style="--fill:${c[3]/40*100}%" data-weight="${i}" aria-label="${c[0]} weight"><span class="bar-label">${c[0]}</span><output>${c[3]}%</output></div></article>`).join('');
+ document.querySelectorAll('[data-weight]').forEach(input=>input.addEventListener('input',e=>{criteria[+e.target.dataset.weight][3]=+e.target.value;e.target.style.setProperty('--fill',`${e.target.value/40*100}%`);e.target.parentElement.querySelector('output').value=`${e.target.value}%`;document.querySelector('#weightTotal').textContent=`${criteria.reduce((s,c)=>s+c[3],0)}%`}));
 }
 function switchView(name){document.getElementById(name)?.scrollIntoView({behavior:'smooth',block:'start'})}
 document.querySelectorAll('.nav-item').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();switchView(a.getAttribute('href').slice(1))}));
