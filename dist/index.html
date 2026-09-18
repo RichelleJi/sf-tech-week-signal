@@ -43,9 +43,9 @@
             </div>
             <div class="model-activity"><span class="activity-pulse"></span><div><small>MODEL ACTIVITY</small><strong id="runStatus">Waiting for a run</strong><p id="modelActivity">Ready.</p></div></div>
             <section class="dev-latency" id="devLatency" hidden aria-label="Developer latency telemetry">
-              <div class="dev-latency-head"><span>DEV LATENCY</span><b>CLIENT PIPELINE</b></div>
-              <div class="dev-latency-grid"><span>UI AVG<strong id="latencyAvg">—</strong></span><span>UI P95<strong id="latencyP95">—</strong></span><span>LATEST<strong id="latencyLatest">—</strong></span><span>THROUGHPUT<strong id="latencyThroughput">—</strong></span></div>
-              <p>Model RTT appears when the classifier endpoint is connected.</p>
+              <div class="dev-latency-head"><span>DEV LATENCY</span><b>MODEL ENDPOINT</b></div>
+              <div class="dev-latency-grid"><span>AVG RTT<strong id="latencyAvg">—</strong></span><span>P95 RTT<strong id="latencyP95">—</strong></span><span>LATEST<strong id="latencyLatest">—</strong></span><span>THROUGHPUT<strong id="latencyThroughput">—</strong></span></div>
+              <p>Measured server-to-model round-trip time.</p>
             </section>
             <div class="live-portfolio">
               <div class="portfolio-live-head"><h3>Signal mix</h3><small>Rendering live</small></div>
@@ -71,7 +71,7 @@
 
     <div class="view" id="events">
       <section class="view-heading">
-        <div><p class="eyebrow">SOURCE SNAPSHOT / OCT 5–11</p><h2>All classified events</h2></div>
+        <div><p class="eyebrow">SOURCE SNAPSHOT / OCT 5–11</p><h2>All events</h2></div>
         <div class="event-tools"><div class="data-access"><span>1,697 stored</span><a href="/api/events?limit=100" target="_blank">API</a><a href="data/events.json" download>JSON</a><a href="data/events.sqlite" download>SQLite</a></div><div class="search-wrap"><span>⌕</span><input id="eventSearch" type="search" placeholder="Search event or host…" aria-label="Search events"></div></div>
       </section>
       <div class="filter-row" id="signalFilters">
