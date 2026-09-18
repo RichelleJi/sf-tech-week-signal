@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import shutil
 import sqlite3
 from pathlib import Path
 
@@ -11,6 +12,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "data" / "sf-tech-week-events.json"
 DIST_DATA = ROOT / "dist" / "data"
+CLIENT = ROOT / "dist" / "client"
 MIGRATIONS = ROOT / "drizzle"
 SCRAPED_AT = "2026-09-17"
 
@@ -107,6 +109,7 @@ def main() -> None:
         raise RuntimeError("Expected 1,697 unique SF Tech Week events")
 
     DIST_DATA.mkdir(parents=True, exist_ok=True)
+    CLIENT.mkdir(parents=True, exist_ok=True)
     MIGRATIONS.mkdir(parents=True, exist_ok=True)
 
     formatted = json.dumps(records, ensure_ascii=False, indent=2) + "\n"
@@ -129,6 +132,13 @@ def main() -> None:
         connection.commit()
     finally:
         connection.close()
+
+    for filename in ("index.html", "styles.css", "app.js"):
+        shutil.copy2(ROOT / "dist" / filename, CLIENT / filename)
+    client_data = CLIENT / "data"
+    if client_data.exists():
+        shutil.rmtree(client_data)
+    shutil.copytree(DIST_DATA, client_data)
 
     print(f"Built {len(records):,} records in JSON, JavaScript, SQLite, and D1 migration formats")
 
