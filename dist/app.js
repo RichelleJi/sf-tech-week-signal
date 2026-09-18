@@ -61,7 +61,6 @@ function rowMarkup(e,full=false){
  if(full)return `<tr data-event-id="${e.id}"><td>${e.time}</td><td>${eventCell}</td><td><span class="tag">${e.signal}</span></td><td>${e.best}</td><td class="score-cell" data-vibe="${e.score}">${e.score}</td><td><span class="verdict ${e.verdict==='GO'?'go':e.verdict==='SKIP'?'skip':''}">${e.verdict}</span></td></tr>`;
  return `<tr data-event-id="${e.id}"><td>${eventCell}</td><td><span class="tag">${e.signal}</span></td><td>${e.best}</td><td class="score-cell" data-vibe="${e.score}">${e.score}</td><td><span class="verdict ${e.verdict==='GO'?'go':e.verdict==='SKIP'?'skip':''}">${e.verdict}</span></td></tr>`;
 }
-function renderRows(){document.querySelector('#overviewRows').innerHTML=events.slice(0,5).map(e=>rowMarkup(e)).join('')}
 let activeSignal='all';
 let processedEvents=40;
 let classificationRunning=false;
@@ -112,7 +111,7 @@ function runClassification(){
  const timer=setInterval(()=>{step++;const processed=Math.min(step,events.length),pct=Math.round(processed/events.length*100),stageIndex=Math.min(Math.floor(pct/27),3),tokensIn=Math.round(78700*pct/100),tokensOut=Math.round(35300*pct/100);bar.style.width=`${pct}%`;detail.textContent=`${pct}%`;processedCount.textContent=`${processed} / 40`;inputTokens.textContent=tokensIn.toLocaleString();outputTokens.textContent=tokensOut.toLocaleString();totalTokens.textContent=(tokensIn+tokensOut).toLocaleString();tokenInBar.style.width=`${tokensIn/114000*100}%`;tokenOutBar.style.width=`${tokensOut/114000*100}%`;updateLiveSignalMix(processed);updateEventRendering(processed);status.textContent=stages[stageIndex];activity.textContent=stageIndex===2&&processed?`Evaluating “${events[Math.min(processed-1,39)].name}”.`:activityStages[stageIndex];if(pct===100){clearInterval(timer);setTimeout(()=>{classificationRunning=false;updateEventRendering(40);panel.classList.remove('running');panel.classList.add('complete');state.textContent='COMPLETE';status.textContent='Classification complete';detail.textContent='100%';activity.textContent='40 events ready.';button.disabled=false;showToast('40 events classified · results updated')},450)}},80);
 }
 function showToast(message){const t=document.querySelector('#toast');t.textContent=message;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400)}
-renderRecommendations();renderRows();renderAllEvents();renderCriteria();
+renderRecommendations();renderAllEvents();renderCriteria();
 function registerAgentTools(){
  const context=document.modelContext;
  if(!context?.registerTool)return;

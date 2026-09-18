@@ -90,12 +90,6 @@
     </div>
 
     <div class="view active" id="overview">
-    <section class="metrics summary-metrics" aria-label="Classification metrics">
-      <article><div class="metric-label">Events classified <span class="trend">+16</span></div><strong id="eventsCount">40</strong><small>of 40 scraped</small></article>
-      <article><div class="metric-label">Needs review</div><strong>7</strong><small>marked maybe</small></article>
-      <article><div class="metric-label">Token volume</div><strong id="tokenMetric">114<span>k</span></strong><small>78.7k in · 35.3k out</small></article>
-    </section>
-
     <section class="workspace-grid shortlist-only">
       <article class="panel recommendations">
         <div class="panel-head">
@@ -112,26 +106,8 @@
 
     </section>
 
-    <section class="panel event-table-panel">
-      <div class="panel-head table-title">
-        <div><p class="eyebrow">RECENT RESULTS</p><h2>Classification queue</h2></div>
-        <a class="text-btn" href="#events">View all 40 →</a>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Event</th><th>Primary signal</th><th>Best for</th><th>Vibe</th><th>Verdict</th></tr></thead>
-          <tbody id="overviewRows"></tbody>
-        </table>
-      </div>
-    </section>
     </div>
 
-    <section class="panel decision-rules end-rules" id="verdict-logic">
-      <div class="panel-head"><div><p class="eyebrow">VERDICT LOGIC</p><h2>Calendar threshold</h2></div><span class="model-pill">Qwen/Qwen3.6-35B-A3B</span></div>
-      <div class="rule-row"><span>GO</span><p>Utility ≥ 72 · noise &lt; 55%.</p></div>
-      <div class="rule-row"><span>MAYBE</span><p>Utility 55–71 · review.</p></div>
-      <div class="rule-row"><span>SKIP</span><p>Utility &lt; 55 or noise ≥ 70%.</p></div>
-    </section>
   </main>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
