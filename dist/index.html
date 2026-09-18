@@ -55,7 +55,7 @@
       </details>
     </div>
     <div class="sidebar-foot">
-      <div class="powered-by"><span>Powered by</span><strong>Featherless.ai</strong><i>✦</i></div>
+      <div class="powered-by"><span>Powered by</span><a href="https://featherless.ai/" target="_blank" rel="noreferrer"><strong>Featherless.ai</strong></a><i>✦</i></div>
     </div>
   </aside>
 
@@ -63,7 +63,7 @@
     <header class="topbar">
       <div>
         <p class="eyebrow">EVENT INTELLIGENCE / 2026</p>
-        <div class="title-lockup"><h1>SF Tech Week <span>Signal</span></h1><span class="featherless-by">by <strong>Featherless.ai</strong> <i>✦</i></span></div>
+        <div class="title-lockup"><h1>SF Tech Week <span>Signal</span></h1><span class="featherless-by">by <a href="https://featherless.ai/" target="_blank" rel="noreferrer"><strong>Featherless.ai</strong></a> <i>✦</i></span></div>
       </div>
     </header>
 
@@ -127,40 +127,6 @@
         </table>
       </div>
     </section>
-    </div>
-
-    <div class="view" id="model">
-      <section class="view-heading">
-        <div><p class="eyebrow">INFERENCE OPERATIONS</p><h2>Model & pipeline</h2><p>Request contract, throughput, and quality signals for the current classification run.</p></div>
-        <span class="health-badge"><i></i> Demo telemetry</span>
-      </section>
-      <section class="model-grid">
-        <article class="panel model-card">
-          <p class="eyebrow">SELECTED CLASSIFIER</p>
-          <h3>Qwen/Qwen3.6-35B-A3B</h3>
-          <p>Selected for structured multi-label classification and efficient high-volume inference. Gemma remains the benchmark challenger.</p>
-          <dl><div><dt>Endpoint</dt><dd>Recursal dev router</dd></div><div><dt>Input mode</dt><dd>Chat / object state</dd></div><div><dt>Question types</dt><dd>Choice · score · noul</dd></div><div><dt>Output</dt><dd>Answers + token usage</dd></div></dl>
-        </article>
-        <article class="panel pipeline-card">
-          <div class="panel-head"><div><p class="eyebrow">PIPELINE TRACE</p><h2>Processing stages</h2></div></div>
-          <div class="process-steps"><div><b>01</b><span>Fetch calendar<small>Read event names, hosts, times, and descriptions.</small></span></div><div><b>02</b><span>Normalize records<small>Clean and map each event into a consistent schema.</small></span></div><div><b>03</b><span>Classify signal<small>Run choice and score questions through Qwen.</small></span></div><div><b>04</b><span>Rank by persona<small>Generate founder, engineer, researcher, and job-seeker lists.</small></span></div></div>
-        </article>
-      </section>
-      <section class="metrics model-metrics">
-        <article><div class="metric-label">Input tokens</div><strong>78.7<span>k</span></strong><small>1,967 avg / event</small></article>
-        <article><div class="metric-label">Output tokens</div><strong>35.3<span>k</span></strong><small>883 avg / event</small></article>
-      </section>
-      <section class="panel contract-card">
-        <div class="panel-head"><div><p class="eyebrow">REQUEST CONTRACT</p><h2>Classifier payload</h2></div><button class="text-btn" id="copyPayload">Copy JSON</button></div>
-        <pre id="payloadPreview"><code>{
-  "state": { "event": "&lt;scraped event record&gt;", "persona": "founder_raising" },
-  "model": "Qwen/Qwen3.6-35B-A3B",
-  "questions": {
-    "primary_signal": { "type": "choice", "criteria": { "investor_access": "…", "engineer_talent": "…", "research_talent": "…", "job_seeker_fit": "…", "sales_noise": "…" } },
-    "worth_attending": { "type": "score", "criteria": ["Skip", "Weak", "Maybe", "Strong", "Must go"] }
-  }
-}</code></pre>
-      </section>
     </div>
 
     <section class="panel decision-rules end-rules" id="verdict-logic">
