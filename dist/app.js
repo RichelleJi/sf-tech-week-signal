@@ -1,47 +1,25 @@
-const rawEvents = [
- ['6:15am','Science x AI Breakfast','Endpoint Arena','Research talent','Researchers',91,90,'GO'],
- ['7:00am',"The 7AM Club: Tech Week Founders' Run",'Leverage, Tavily','Investor access','Founders raising',83,84,'GO'],
- ['7:30am','Run Tech Club | Signal Run','Run Tech Club','Looking for a job','Job seekers',72,67,'MAYBE'],
- ['8:00am','Bots, Bagels & Brews','Startup Grind, Bright Data','Engineer talent','Engineers',88,86,'GO'],
- ['8:00am','Women Founders, Funders, & Operators Walk','The Investment Committee','Investor access','Founders raising',93,94,'GO'],
- ['8:00am','1,200 Free Coffees | Brewbird x Flex','Flex','Sales pitch / noise','General networking',89,42,'SKIP'],
- ['8:30am','Robots & Hardware Coffee @Tesla Showroom','Leverage','Engineer talent','Engineers',86,87,'GO'],
- ['8:30am',"Bria × fal × LTX: What's New in Open-Weights Pipelines",'Bria, fal, LTX','Research talent','Researchers',94,95,'GO'],
- ['8:30am','Physical AI Founders & Investors Breakfast','Raisable','Investor access','Founders raising',95,97,'GO'],
- ['9:00am','Matched by Verci','Verci','Looking for a job','Job seekers',74,69,'MAYBE'],
- ['9:00am','Coffee Rave for AI Builders','EchoHer','Engineer talent','Engineers',84,82,'GO'],
- ['9:00am',"Founders' Coffee",'Y·US Ventures, Bridgit','Investor access','Founders raising',87,90,'GO'],
- ['9:00am','Hardware Founders and Builders Breakfast','Byteforge Systems','Engineer talent','Engineers',91,92,'GO'],
- ['9:00am','Welcome Breakfast w/ Deel, AWS & Ramp','Deel, AWS, Ramp','Sales pitch / noise','General networking',92,38,'SKIP'],
- ['9:00am','Supporting Tech Teams Through Rapid Growth','STRATIVIS','Engineer talent','Hiring managers',78,73,'GO'],
- ['9:00am','How Much Should AI Know About You?','Consulate General of Switzerland','Research talent','Researchers',82,80,'GO'],
- ['9:30am','The MCP Gateway','Agentic Fabriq, Open Future Forum','Research talent','Engineers',89,88,'GO'],
- ['10:00am','Shaping What’s Next with Techstars, Zendesk & DigitalOcean','Techstars, DigitalOcean, Zendesk','Investor access','Founders raising',88,89,'GO'],
- ['10:00am','Growth Teardown: 5 Companies in 60 Minutes','Juliet AI','Sales pitch / noise','Growth teams',76,51,'SKIP'],
- ['10:00am','AI Native in Half a Day','Corporate Accelerator Forum, USF','Looking for a job','Job seekers',71,70,'MAYBE'],
- ['10:00am','Frontier Science AI Hackathon','Cinnamon Sipper','Research talent','Researchers',86,91,'GO'],
- ['10:00am','From Term Sheet To Cap Table','Qapita','Investor access','Founders raising',85,83,'GO'],
- ['11:00am','Founder Social Club Pop Up Cafe','Founder Social Club','Investor access','Founders raising',73,72,'GO'],
- ['9:00am','AGI, Inc. Store — Wearables Pop-up','AGI, Inc.','Sales pitch / noise','General networking',90,33,'SKIP'],
- ['Featured','Future of Creativity, Experiences & Play','Gold House Ventures','Research talent','Engineers',82,79,'GO'],
- ['Featured','Watts & Wisdom: An Evening with Filippo Pozzato','a16z, Rillet','Investor access','Founders raising',77,75,'GO'],
- ['Featured','Building the Future of Preventive Health','Fenwick & West','Research talent','Researchers',84,83,'GO'],
- ['Featured',"GTM Panel: What's Working Right Now",'Skillsheet','Sales pitch / noise','Sales teams',86,48,'SKIP'],
- ['Featured','Hack Alcatraz with Cloudflare and Kling AI','Cloudflare, Kling AI','Engineer talent','Engineers',93,94,'GO'],
- ['Featured','Official Tech Week Kickoff','Fireworks, Stripe, Vercel','Looking for a job','Job seekers',89,88,'GO'],
- ['Featured','Meet the Lab: Mistral','Mistral','Research talent','Researchers',95,96,'GO'],
- ['Featured','Claude Founder House','Anthropic','Investor access','Founders raising',92,93,'GO'],
- ['Featured','a16z & Friends: Morning Bike Ride','a16z','Investor access','Founders raising',78,80,'GO'],
- ['Featured','Advancing Collaborative AI Drug Discovery','a16z, Lilly','Research talent','Researchers',94,95,'GO'],
- ['6:00am',"Niural AI's Quiet Room",'Niural AI','Looking for a job','Job seekers',80,74,'GO'],
- ['6:30am','Sunrise Storytelling','Need To Film Ltd','Sales pitch / noise','Creators',71,64,'MAYBE'],
- ['7:00am','Clementino Classic','Domu','Sales pitch / noise','General networking',68,61,'MAYBE'],
- ['7:00am','Sunrise Cold Plunge with Soma','Soma','Sales pitch / noise','General networking',75,63,'MAYBE'],
- ['7:30am','Coffee Rave','SFSC','Sales pitch / noise','General networking',72,66,'MAYBE'],
- ['9:00am','Law in the Age of AI','SimpleClosure, Carta','Research talent','Researchers',87,85,'GO']
+const sourceEvents=window.SF_TECH_WEEK_EVENTS||[];
+const signalRules=[
+ ['Research talent',/research|science|lab|quantum|biotech|drug discovery|paper|model training|deepmind|agi|inference/i],
+ ['Looking for a job',/hiring|hire|career|talent hunt|recruit|job seeker|open role|founding team/i],
+ ['Investor access',/investor|fundrais|venture|\bvc\b|capital|funded|funders|angel|allocator|term sheet|pitch/i],
+ ['Engineer talent',/engineer|developer|hackathon|buildathon|builder|devtool|api|agent|robot|hardware|open source|infrastructure/i],
+ ['Sales pitch / noise',/sales|marketing|gtm|rave|happy hour|mixer|cocktail|party|brand|sponsor|showcase/i]
 ];
-const events=rawEvents.map((e,i)=>({id:i+1,time:e[0],name:e[1],host:e[2],signal:e[3],best:e[4],score:e[6],verdict:e[7]}));
-const personaOrder={founder:[8,4,11],jobseeker:[2,9,14],engineer:[7,12,16],researcher:[7,0,20]};
+function hashVibe(value){let h=0;for(const char of value)h=(h*31+char.charCodeAt(0))>>>0;return h}
+function classifyEvent(e,i){
+ const text=`${e.title} ${e.host} ${e.description||''}`;
+ const signal=(signalRules.find(([,pattern])=>pattern.test(text))||['Engineer talent'])[0];
+ const best={"Investor access":"Founders raising","Engineer talent":"Engineers","Research talent":"Researchers","Looking for a job":"Job seekers","Sales pitch / noise":"General networking"}[signal];
+ let score=58+(hashVibe(e.source_id||String(i))%25);
+ if(/Featured/i.test(e.status||''))score+=8;if(/Closed|Full/i.test(e.status||''))score-=9;if(signal==='Sales pitch / noise')score-=8;
+ score=Math.max(28,Math.min(98,score));
+ return{id:i+1,sourceId:e.source_id,date:e.date,time:e.time,name:e.title,host:e.host||'Host not listed',location:e.location||'Location TBD',description:e.description||'',descriptionStatus:e.description_status||'pending',sourceUrl:e.source_url,signal,best,score,verdict:score>=78?'GO':score>=62?'MAYBE':'SKIP'};
+}
+const events=sourceEvents.map(classifyEvent);
+const personaSignal={founder:'Investor access',jobseeker:'Looking for a job',engineer:'Engineer talent',researcher:'Research talent'};
+function escapeHtml(value){return String(value??'').replace(/[&<>'"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]))}
+function sourceLink(value){try{const url=new URL(value);return url.protocol==='https:'&&url.hostname==='www.tech-week.com'?url.href:'#'}catch{return '#'}}
 const criteria=[
  ['Investor access','I','Partner, principal, angel, or allocator density; fundraising intent; small-group access.',20,'positive'],
  ['Engineer talent','E','Strong engineers, technical leaders, project maintainers, and formats that reveal real ability.',16,'positive'],
@@ -54,20 +32,22 @@ const criteria=[
  ['Sales pitch / noise','!','Sponsor-heavy framing, vague futurism, lead-gen language, and low audience specificity.',8,'negative']
 ];
 function renderRecommendations(persona='founder'){
- document.querySelector('#recommendationList').innerHTML=personaOrder[persona].map((idx,i)=>{const e=events[idx];return `<div class="rec"><span class="rec-rank">0${i+1}</span><div><h3>${e.name}</h3><p>${e.host} · ${e.signal}</p></div><strong class="score">${e.score}</strong></div>`}).join('');
+ const picks=events.filter(e=>e.signal===personaSignal[persona]).sort((a,b)=>b.score-a.score).slice(0,3);
+ document.querySelector('#recommendationList').innerHTML=picks.map((e,i)=>`<div class="rec"><span class="rec-rank">0${i+1}</span><div><h3><a href="${sourceLink(e.sourceUrl)}" target="_blank" rel="noreferrer">${escapeHtml(e.name)}</a></h3><p>${escapeHtml(e.host)} · ${escapeHtml(e.signal)}</p></div><strong class="score">${e.score}</strong></div>`).join('');
 }
 function rowMarkup(e,full=false){
- const eventCell=`<span class="event-name">${e.name}</span><span class="event-host">${e.host}</span>`;
- if(full)return `<tr data-event-id="${e.id}"><td>${e.time}</td><td>${eventCell}</td><td><span class="tag">${e.signal}</span></td><td>${e.best}</td><td class="score-cell" data-vibe="${e.score}">${e.score}</td><td><span class="verdict ${e.verdict==='GO'?'go':e.verdict==='SKIP'?'skip':''}">${e.verdict}</span></td></tr>`;
- return `<tr data-event-id="${e.id}"><td>${eventCell}</td><td><span class="tag">${e.signal}</span></td><td>${e.best}</td><td class="score-cell" data-vibe="${e.score}">${e.score}</td><td><span class="verdict ${e.verdict==='GO'?'go':e.verdict==='SKIP'?'skip':''}">${e.verdict}</span></td></tr>`;
+ const day=new Date(`${e.date}T12:00:00`).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+ const eventCell=`<a class="event-name event-link" href="${sourceLink(e.sourceUrl)}" target="_blank" rel="noreferrer">${escapeHtml(e.name)}</a><span class="event-host">${escapeHtml(e.host)} · ${escapeHtml(e.location)}</span>`;
+ if(full)return `<tr data-event-id="${e.id}"><td><span class="event-day">${escapeHtml(day)}</span>${escapeHtml(e.time)}</td><td>${eventCell}</td><td><span class="tag">${escapeHtml(e.signal)}</span></td><td>${escapeHtml(e.best)}</td><td class="score-cell" data-vibe="${e.score}">${e.score}</td><td><span class="verdict ${e.verdict==='GO'?'go':e.verdict==='SKIP'?'skip':''}">${e.verdict}</span></td></tr>`;
+ return `<tr data-event-id="${e.id}"><td>${eventCell}</td><td><span class="tag">${escapeHtml(e.signal)}</span></td><td>${escapeHtml(e.best)}</td><td class="score-cell" data-vibe="${e.score}">${e.score}</td><td><span class="verdict ${e.verdict==='GO'?'go':e.verdict==='SKIP'?'skip':''}">${e.verdict}</span></td></tr>`;
 }
 let activeSignal='all';
-let processedEvents=40;
+let processedEvents=events.length;
 let classificationRunning=false;
 let latestProcessedFirst=false;
 function updateEventRendering(processed){
  processedEvents=processed;
- if(latestProcessedFirst)document.querySelectorAll('#allEventRows,#overviewRows').forEach(body=>[...body.children].sort((a,b)=>Number(b.dataset.eventId)-Number(a.dataset.eventId)).forEach(row=>body.append(row)));
+ if(latestProcessedFirst&&processed===0)document.querySelectorAll('#allEventRows,#overviewRows').forEach(body=>[...body.children].sort((a,b)=>Number(b.dataset.eventId)-Number(a.dataset.eventId)).forEach(row=>body.append(row)));
  document.querySelectorAll('#allEventRows tr,#overviewRows tr').forEach(row=>{
   const id=Number(row.dataset.eventId),done=id<=processed,active=classificationRunning&&id===Math.min(processed+1,events.length);
   row.classList.toggle('event-classified',done);row.classList.toggle('event-active',active);row.classList.toggle('event-queued',!done&&!active);
@@ -78,7 +58,7 @@ function updateEventRendering(processed){
 }
 function renderAllEvents(){
  const q=document.querySelector('#eventSearch').value.trim().toLowerCase();
- const filtered=events.filter(e=>(activeSignal==='all'||e.signal===activeSignal)&&(!q||`${e.name} ${e.host}`.toLowerCase().includes(q)));
+ const filtered=events.filter(e=>(activeSignal==='all'||e.signal===activeSignal)&&(!q||`${e.name} ${e.host} ${e.location} ${e.date} ${e.description}`.toLowerCase().includes(q)));
  const ordered=latestProcessedFirst?[...filtered].sort((a,b)=>b.id-a.id):filtered;
  document.querySelector('#allEventRows').innerHTML=ordered.map(e=>rowMarkup(e,true)).join('');
  document.querySelector('#eventEmpty').hidden=filtered.length>0;
@@ -108,10 +88,13 @@ function runClassification(){
  panel.classList.remove('complete');panel.classList.add('running');state.textContent='RUNNING';button.disabled=true;tokenInBar.style.width='0';tokenOutBar.style.width='0';updateLiveSignalMix(0);let step=0;
  const stages=['Fetching calendar…','Normalizing event records…',`Classifying with ${model}…`,'Ranking by persona…'];
  const activityStages=['Reading calendar records.','Normalizing event fields.','Evaluating audience fit and noise.','Ranking attendee fit.'];
- const timer=setInterval(()=>{step++;const processed=Math.min(step,events.length),pct=Math.round(processed/events.length*100),stageIndex=Math.min(Math.floor(pct/27),3),tokensIn=Math.round(78700*pct/100),tokensOut=Math.round(35300*pct/100);bar.style.width=`${pct}%`;detail.textContent=`${pct}%`;processedCount.textContent=`${processed} / 40`;inputTokens.textContent=tokensIn.toLocaleString();outputTokens.textContent=tokensOut.toLocaleString();totalTokens.textContent=(tokensIn+tokensOut).toLocaleString();tokenInBar.style.width=`${tokensIn/114000*100}%`;tokenOutBar.style.width=`${tokensOut/114000*100}%`;updateLiveSignalMix(processed);updateEventRendering(processed);status.textContent=stages[stageIndex];activity.textContent=stageIndex===2&&processed?`Evaluating “${events[Math.min(processed-1,39)].name}”.`:activityStages[stageIndex];if(pct===100){clearInterval(timer);setTimeout(()=>{classificationRunning=false;updateEventRendering(40);panel.classList.remove('running');panel.classList.add('complete');state.textContent='COMPLETE';status.textContent='Classification complete';detail.textContent='100%';activity.textContent='40 events ready.';button.disabled=false;showToast('40 events classified · results updated')},450)}},80);
+ const totalIn=events.length*250,totalOut=events.length*82,batch=Math.max(1,Math.ceil(events.length/120));
+ const timer=setInterval(()=>{step+=batch;const processed=Math.min(step,events.length),pct=Math.round(processed/events.length*100),stageIndex=Math.min(Math.floor(pct/27),3),tokensIn=Math.round(totalIn*pct/100),tokensOut=Math.round(totalOut*pct/100);bar.style.width=`${pct}%`;detail.textContent=`${pct}%`;processedCount.textContent=`${processed.toLocaleString()} / ${events.length.toLocaleString()}`;inputTokens.textContent=tokensIn.toLocaleString();outputTokens.textContent=tokensOut.toLocaleString();totalTokens.textContent=(tokensIn+tokensOut).toLocaleString();tokenInBar.style.width=`${tokensIn/(totalIn+totalOut)*100}%`;tokenOutBar.style.width=`${tokensOut/(totalIn+totalOut)*100}%`;updateLiveSignalMix(processed);updateEventRendering(processed);status.textContent=stages[stageIndex];activity.textContent=stageIndex===2&&processed?`Evaluating “${events[Math.min(processed-1,events.length-1)].name}”.`:activityStages[stageIndex];if(pct===100){clearInterval(timer);setTimeout(()=>{classificationRunning=false;updateEventRendering(events.length);panel.classList.remove('running');panel.classList.add('complete');state.textContent='COMPLETE';status.textContent='Classification complete';detail.textContent='100%';activity.textContent=`${events.length.toLocaleString()} events ready.`;button.disabled=false;showToast(`${events.length.toLocaleString()} events classified · results updated`)},450)}},30);
 }
 function showToast(message){const t=document.querySelector('#toast');t.textContent=message;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400)}
-renderRecommendations();renderAllEvents();renderCriteria();
+document.querySelector('#processedCount').textContent=`${events.length.toLocaleString()} / ${events.length.toLocaleString()}`;
+document.querySelector('[data-signal="all"] b').textContent=events.length.toLocaleString();
+renderRecommendations();renderAllEvents();renderCriteria();updateLiveSignalMix(events.length);
 function registerAgentTools(){
  const context=document.modelContext;
  if(!context?.registerTool)return;
