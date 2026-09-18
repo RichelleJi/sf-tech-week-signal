@@ -45,6 +45,16 @@ let activeSignal='all';
 let processedEvents=events.length;
 let classificationRunning=false;
 let latestProcessedFirst=false;
+const developerMode=new URLSearchParams(location.search).get('dev')==='1';
+document.querySelector('#devLatency').hidden=!developerMode;
+function updateDevLatency(samples,processed,startedAt){
+ if(!developerMode||!samples.length)return;
+ const ordered=[...samples].sort((a,b)=>a-b),average=samples.reduce((sum,value)=>sum+value,0)/samples.length,p95=ordered[Math.min(ordered.length-1,Math.floor(ordered.length*.95))],latest=samples[samples.length-1],elapsed=Math.max(1,performance.now()-startedAt);
+ document.querySelector('#latencyAvg').textContent=`${average.toFixed(1)} ms`;
+ document.querySelector('#latencyP95').textContent=`${p95.toFixed(1)} ms`;
+ document.querySelector('#latencyLatest').textContent=`${latest.toFixed(1)} ms`;
+ document.querySelector('#latencyThroughput').textContent=`${Math.round(processed/elapsed*1000)} ev/s`;
+}
 function updateEventRendering(processed){
  processedEvents=processed;
  if(latestProcessedFirst&&processed===0)document.querySelectorAll('#allEventRows,#overviewRows').forEach(body=>[...body.children].sort((a,b)=>Number(b.dataset.eventId)-Number(a.dataset.eventId)).forEach(row=>body.append(row)));
@@ -84,12 +94,20 @@ function updateLiveSignalMix(processed){
 function runClassification(){
  const panel=document.querySelector('#runPanel'),bar=document.querySelector('#runProgress'),status=document.querySelector('#runStatus'),detail=document.querySelector('#runDetail'),state=document.querySelector('#runState'),button=document.querySelector('#runBtn'),processedCount=document.querySelector('#processedCount'),inputTokens=document.querySelector('#inputTokens'),outputTokens=document.querySelector('#outputTokens'),totalTokens=document.querySelector('#totalTokens'),tokenInBar=document.querySelector('#tokenInBar'),tokenOutBar=document.querySelector('#tokenOutBar'),activity=document.querySelector('#modelActivity');
  const model=document.querySelector('#modelSelect').value.split('/').pop();
+ const latencySamples=[],runStartedAt=performance.now();
  classificationRunning=true;latestProcessedFirst=true;processedEvents=0;updateEventRendering(0);
  panel.classList.remove('complete');panel.classList.add('running');state.textContent='RUNNING';button.disabled=true;tokenInBar.style.width='0';tokenOutBar.style.width='0';updateLiveSignalMix(0);let step=0;
  const stages=['Fetching calendar…','Normalizing event records…',`Classifying with ${model}…`,'Ranking by persona…'];
  const activityStages=['Reading calendar records.','Normalizing event fields.','Evaluating audience fit and noise.','Ranking attendee fit.'];
  const totalIn=events.length*250,totalOut=events.length*82,batch=Math.max(1,Math.ceil(events.length/120));
- const timer=setInterval(()=>{step+=batch;const processed=Math.min(step,events.length),pct=Math.round(processed/events.length*100),stageIndex=Math.min(Math.floor(pct/27),3),tokensIn=Math.round(totalIn*pct/100),tokensOut=Math.round(totalOut*pct/100);bar.style.width=`${pct}%`;detail.textContent=`${pct}%`;processedCount.textContent=`${processed.toLocaleString()} / ${events.length.toLocaleString()}`;inputTokens.textContent=tokensIn.toLocaleString();outputTokens.textContent=tokensOut.toLocaleString();totalTokens.textContent=(tokensIn+tokensOut).toLocaleString();tokenInBar.style.width=`${tokensIn/(totalIn+totalOut)*100}%`;tokenOutBar.style.width=`${tokensOut/(totalIn+totalOut)*100}%`;updateLiveSignalMix(processed);updateEventRendering(processed);status.textContent=stages[stageIndex];activity.textContent=stageIndex===2&&processed?`Evaluating “${events[Math.min(processed-1,events.length-1)].name}”.`:activityStages[stageIndex];if(pct===100){clearInterval(timer);setTimeout(()=>{classificationRunning=false;updateEventRendering(events.length);panel.classList.remove('running');panel.classList.add('complete');state.textContent='COMPLETE';status.textContent='Classification complete';detail.textContent='100%';activity.textContent=`${events.length.toLocaleString()} events ready.`;button.disabled=false;showToast(`${events.length.toLocaleString()} events classified · results updated`)},450)}},30);
+ const timer=setInterval(()=>{
+  const tickStartedAt=performance.now();
+  step+=batch;
+  const processed=Math.min(step,events.length),pct=Math.round(processed/events.length*100),stageIndex=Math.min(Math.floor(pct/27),3),tokensIn=Math.round(totalIn*pct/100),tokensOut=Math.round(totalOut*pct/100);
+  bar.style.width=`${pct}%`;detail.textContent=`${pct}%`;processedCount.textContent=`${processed.toLocaleString()} / ${events.length.toLocaleString()}`;inputTokens.textContent=tokensIn.toLocaleString();outputTokens.textContent=tokensOut.toLocaleString();totalTokens.textContent=(tokensIn+tokensOut).toLocaleString();tokenInBar.style.width=`${tokensIn/(totalIn+totalOut)*100}%`;tokenOutBar.style.width=`${tokensOut/(totalIn+totalOut)*100}%`;updateLiveSignalMix(processed);updateEventRendering(processed);status.textContent=stages[stageIndex];activity.textContent=stageIndex===2&&processed?`Evaluating “${events[Math.min(processed-1,events.length-1)].name}”.`:activityStages[stageIndex];
+  latencySamples.push(performance.now()-tickStartedAt);updateDevLatency(latencySamples,processed,runStartedAt);
+  if(pct===100){clearInterval(timer);setTimeout(()=>{classificationRunning=false;updateEventRendering(events.length);panel.classList.remove('running');panel.classList.add('complete');state.textContent='COMPLETE';status.textContent='Classification complete';detail.textContent='100%';activity.textContent=`${events.length.toLocaleString()} events ready.`;button.disabled=false;showToast(`${events.length.toLocaleString()} events classified · results updated`)},450)}
+ },30);
 }
 function showToast(message){const t=document.querySelector('#toast');t.textContent=message;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400)}
 document.querySelector('#processedCount').textContent=`${events.length.toLocaleString()} / ${events.length.toLocaleString()}`;

@@ -42,6 +42,11 @@
               <div class="token-legend"><span><i class="token-in"></i>Tokens in <b id="inputTokens">0</b></span><span><i class="token-out"></i>Tokens out <b id="outputTokens">0</b></span></div>
             </div>
             <div class="model-activity"><span class="activity-pulse"></span><div><small>MODEL ACTIVITY</small><strong id="runStatus">Waiting for a run</strong><p id="modelActivity">Ready.</p></div></div>
+            <section class="dev-latency" id="devLatency" hidden aria-label="Developer latency telemetry">
+              <div class="dev-latency-head"><span>DEV LATENCY</span><b>CLIENT PIPELINE</b></div>
+              <div class="dev-latency-grid"><span>UI AVG<strong id="latencyAvg">—</strong></span><span>UI P95<strong id="latencyP95">—</strong></span><span>LATEST<strong id="latencyLatest">—</strong></span><span>THROUGHPUT<strong id="latencyThroughput">—</strong></span></div>
+              <p>Model RTT appears when the classifier endpoint is connected.</p>
+            </section>
             <div class="live-portfolio">
               <div class="portfolio-live-head"><h3>Signal mix</h3><small>Rendering live</small></div>
               <div class="donut-wrap"><div class="donut live-donut" id="liveMixPie" role="img" aria-label="No events classified yet"><div><strong id="liveMixTotal">0</strong><span>EVENTS</span></div></div><div class="legend"><span><i class="c-investor"></i>Investor access <b id="mixInvestor">0</b></span><span><i class="c-hiring"></i>Engineer talent <b id="mixEngineer">0</b></span><span><i class="c-research"></i>Research talent <b id="mixResearch">0</b></span><span><i class="c-jobs"></i>Looking for a job <b id="mixJobs">0</b></span><span><i class="c-noise"></i>Sales pitch / noise <b id="mixNoise">0</b></span></div></div>
