@@ -65,8 +65,10 @@ function renderRows(){document.querySelector('#overviewRows').innerHTML=events.s
 let activeSignal='all';
 let processedEvents=40;
 let classificationRunning=false;
+let latestProcessedFirst=false;
 function updateEventRendering(processed){
  processedEvents=processed;
+ if(latestProcessedFirst)document.querySelectorAll('#allEventRows,#overviewRows').forEach(body=>[...body.children].sort((a,b)=>Number(b.dataset.eventId)-Number(a.dataset.eventId)).forEach(row=>body.append(row)));
  document.querySelectorAll('#allEventRows tr,#overviewRows tr').forEach(row=>{
   const id=Number(row.dataset.eventId),done=id<=processed,active=classificationRunning&&id===Math.min(processed+1,events.length);
   row.classList.toggle('event-classified',done);row.classList.toggle('event-active',active);row.classList.toggle('event-queued',!done&&!active);
@@ -78,7 +80,8 @@ function updateEventRendering(processed){
 function renderAllEvents(){
  const q=document.querySelector('#eventSearch').value.trim().toLowerCase();
  const filtered=events.filter(e=>(activeSignal==='all'||e.signal===activeSignal)&&(!q||`${e.name} ${e.host}`.toLowerCase().includes(q)));
- document.querySelector('#allEventRows').innerHTML=filtered.map(e=>rowMarkup(e,true)).join('');
+ const ordered=latestProcessedFirst?[...filtered].sort((a,b)=>b.id-a.id):filtered;
+ document.querySelector('#allEventRows').innerHTML=ordered.map(e=>rowMarkup(e,true)).join('');
  document.querySelector('#eventEmpty').hidden=filtered.length>0;
  updateEventRendering(processedEvents);
 }
@@ -102,11 +105,11 @@ function updateLiveSignalMix(processed){
 function runClassification(){
  const panel=document.querySelector('#runPanel'),bar=document.querySelector('#runProgress'),status=document.querySelector('#runStatus'),detail=document.querySelector('#runDetail'),state=document.querySelector('#runState'),button=document.querySelector('#runBtn'),processedCount=document.querySelector('#processedCount'),inputTokens=document.querySelector('#inputTokens'),outputTokens=document.querySelector('#outputTokens'),totalTokens=document.querySelector('#totalTokens'),tokenInBar=document.querySelector('#tokenInBar'),tokenOutBar=document.querySelector('#tokenOutBar'),activity=document.querySelector('#modelActivity');
  const model=document.querySelector('#modelSelect').value.split('/').pop();
- classificationRunning=true;processedEvents=0;updateEventRendering(0);
+ classificationRunning=true;latestProcessedFirst=true;processedEvents=0;updateEventRendering(0);
  panel.classList.remove('complete');panel.classList.add('running');state.textContent='RUNNING';button.disabled=true;tokenInBar.style.width='0';tokenOutBar.style.width='0';updateLiveSignalMix(0);let step=0;
  const stages=['Fetching calendar…','Normalizing event records…',`Classifying with ${model}…`,'Ranking by persona…'];
- const activityStages=['Reading titles, hosts, times, and descriptions from the calendar.','Mapping source fields into a consistent event schema.','Scoring audience fit, event quality, and sales-noise signals.','Building ranked recommendations for each attendee persona.'];
- const timer=setInterval(()=>{step++;const processed=Math.min(step,events.length),pct=Math.round(processed/events.length*100),stageIndex=Math.min(Math.floor(pct/27),3),tokensIn=Math.round(78700*pct/100),tokensOut=Math.round(35300*pct/100);bar.style.width=`${pct}%`;detail.textContent=`${pct}%`;processedCount.textContent=`${processed} / 40`;inputTokens.textContent=tokensIn.toLocaleString();outputTokens.textContent=tokensOut.toLocaleString();totalTokens.textContent=(tokensIn+tokensOut).toLocaleString();tokenInBar.style.width=`${tokensIn/114000*100}%`;tokenOutBar.style.width=`${tokensOut/114000*100}%`;updateLiveSignalMix(processed);updateEventRendering(processed);status.textContent=stages[stageIndex];activity.textContent=stageIndex===2&&processed?`Evaluating “${events[Math.min(processed-1,39)].name}” against the weighted rubric.`:activityStages[stageIndex];if(pct===100){clearInterval(timer);setTimeout(()=>{classificationRunning=false;updateEventRendering(40);panel.classList.remove('running');panel.classList.add('complete');state.textContent='COMPLETE';status.textContent='Classification complete';detail.textContent='100%';activity.textContent='40 events vibe-ranked and ready for review.';button.disabled=false;showToast('40 events classified · results updated')},450)}},80);
+ const activityStages=['Reading calendar records.','Normalizing event fields.','Evaluating audience fit and noise.','Ranking attendee fit.'];
+ const timer=setInterval(()=>{step++;const processed=Math.min(step,events.length),pct=Math.round(processed/events.length*100),stageIndex=Math.min(Math.floor(pct/27),3),tokensIn=Math.round(78700*pct/100),tokensOut=Math.round(35300*pct/100);bar.style.width=`${pct}%`;detail.textContent=`${pct}%`;processedCount.textContent=`${processed} / 40`;inputTokens.textContent=tokensIn.toLocaleString();outputTokens.textContent=tokensOut.toLocaleString();totalTokens.textContent=(tokensIn+tokensOut).toLocaleString();tokenInBar.style.width=`${tokensIn/114000*100}%`;tokenOutBar.style.width=`${tokensOut/114000*100}%`;updateLiveSignalMix(processed);updateEventRendering(processed);status.textContent=stages[stageIndex];activity.textContent=stageIndex===2&&processed?`Evaluating “${events[Math.min(processed-1,39)].name}”.`:activityStages[stageIndex];if(pct===100){clearInterval(timer);setTimeout(()=>{classificationRunning=false;updateEventRendering(40);panel.classList.remove('running');panel.classList.add('complete');state.textContent='COMPLETE';status.textContent='Classification complete';detail.textContent='100%';activity.textContent='40 events ready.';button.disabled=false;showToast('40 events classified · results updated')},450)}},80);
 }
 function showToast(message){const t=document.querySelector('#toast');t.textContent=message;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400)}
 renderRecommendations();renderRows();renderAllEvents();renderCriteria();

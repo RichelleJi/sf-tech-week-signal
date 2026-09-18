@@ -41,7 +41,7 @@
               <div class="token-track" aria-label="Input and output token usage"><i class="token-in" id="tokenInBar"></i><i class="token-out" id="tokenOutBar"></i></div>
               <div class="token-legend"><span><i class="token-in"></i>Tokens in <b id="inputTokens">0</b></span><span><i class="token-out"></i>Tokens out <b id="outputTokens">0</b></span></div>
             </div>
-            <div class="model-activity"><span class="activity-pulse"></span><div><small>MODEL ACTIVITY</small><strong id="runStatus">Waiting for a run</strong><p id="modelActivity">Ready to evaluate event records against the classification rubric.</p></div></div>
+            <div class="model-activity"><span class="activity-pulse"></span><div><small>MODEL ACTIVITY</small><strong id="runStatus">Waiting for a run</strong><p id="modelActivity">Ready.</p></div></div>
             <div class="live-portfolio">
               <div class="portfolio-live-head"><h3>Signal mix</h3><small>Rendering live</small></div>
               <div class="donut-wrap"><div class="donut live-donut" id="liveMixPie" role="img" aria-label="No events classified yet"><div><strong id="liveMixTotal">0</strong><span>EVENTS</span></div></div><div class="legend"><span><i class="c-investor"></i>Investor access <b id="mixInvestor">0</b></span><span><i class="c-hiring"></i>Engineer talent <b id="mixEngineer">0</b></span><span><i class="c-research"></i>Research talent <b id="mixResearch">0</b></span><span><i class="c-jobs"></i>Looking for a job <b id="mixJobs">0</b></span><span><i class="c-noise"></i>Sales pitch / noise <b id="mixNoise">0</b></span></div></div>
@@ -66,13 +66,13 @@
 
     <section class="notice" aria-label="Dataset status">
       <span>SNAPSHOT</span>
-      <p>40 events from the official SF Tech Week calendar. Classifications are a rubric-based preview until the API proxy is connected.</p>
+      <p>40 official SF Tech Week events · rubric preview.</p>
       <a href="https://www.tech-week.com/calendar/sf" target="_blank" rel="noreferrer">View source →</a>
     </section>
 
     <div class="view" id="events">
       <section class="view-heading">
-        <div><p class="eyebrow">SOURCE SNAPSHOT / OCT 5</p><h2>All classified events</h2><p>Search the imported calendar or filter by the model’s strongest signal.</p></div>
+        <div><p class="eyebrow">SOURCE SNAPSHOT / OCT 5</p><h2>All classified events</h2></div>
         <div class="search-wrap"><span>⌕</span><input id="eventSearch" type="search" placeholder="Search event or host…" aria-label="Search events"></div>
       </section>
       <div class="filter-row" id="signalFilters">
@@ -128,9 +128,9 @@
 
     <section class="panel decision-rules end-rules" id="verdict-logic">
       <div class="panel-head"><div><p class="eyebrow">VERDICT LOGIC</p><h2>Calendar threshold</h2></div><span class="model-pill">Qwen/Qwen3.6-35B-A3B</span></div>
-      <div class="rule-row"><span>GO</span><p>Overall utility ≥ 72 and sales-noise probability &lt; 0.55.</p></div>
-      <div class="rule-row"><span>MAYBE</span><p>Utility 55–71. Route to human review.</p></div>
-      <div class="rule-row"><span>SKIP</span><p>Utility &lt; 55, or sales-noise probability ≥ 0.70 without a strong audience-specific reason.</p></div>
+      <div class="rule-row"><span>GO</span><p>Utility ≥ 72 · noise &lt; 55%.</p></div>
+      <div class="rule-row"><span>MAYBE</span><p>Utility 55–71 · review.</p></div>
+      <div class="rule-row"><span>SKIP</span><p>Utility &lt; 55 or noise ≥ 70%.</p></div>
     </section>
   </main>
 
